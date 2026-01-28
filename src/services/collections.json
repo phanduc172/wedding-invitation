@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "sheet": "collections",
+  "total": 2,
+  "data": [
+    {
+      "id": 1,
+      "title": "Thiệp cưới phong cách Hàn Quốc",
+      "description": "Nhẹ nhàng – tinh tế",
+      "product_ids": 101.102
+    },
+    {
+      "id": 2,
+      "title": "Thiệp cưới Luxury",
+      "description": "Sang trọng – cao cấp",
+      "product_ids": 105.11
+    }
+  ]
+}

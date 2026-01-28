@@ -13,6 +13,7 @@
     "bootstrap": "^5.3.8",
     "bootstrap-vue": "^2.23.1",
     "core-js": "^3.6.5",
+    "sweetalert2": "^11.26.17",
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.6.2",
     "vue-router": "^3.6.5"

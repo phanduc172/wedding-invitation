@@ -22,9 +22,8 @@
             <!-- Sidebar -->
             <b-col md="3" class="category-sidebar">
                 <ul class="category-list list-unstyled">
-                    <li v-for="(category, index) in categories" :key="index"
-                        :class="{ active: selectedCategory === category.name }"
-                        @click="selectedCategory = category.name">
+                    <li v-for="category in categories" :key="category.id"
+                        :class="{ active: selectedCategory === category.id }" @click="selectCategory(category.id)">
                         {{ category.name }}
                     </li>
                 </ul>
@@ -32,16 +31,31 @@
 
             <!-- Collection -->
             <b-col md="9">
-                <b-row>
-                    <b-col v-for="(img, index) in filteredImages" :key="index" cols="12" sm="12" md="6" lg="4" class="mb-4">
-                        <b-card :img-src="img" img-top class="custom-card h-100">
+                <b-row v-if="filteredProducts.length">
+                    <b-col v-for="product in filteredProducts" :key="product.id" cols="12" md="6" lg="4">
+                        <b-card :img-src="product.thumbnail" img-top class="custom-card h-100">
+                            <h6 class="mt-2 fw-bold">{{ product.title }}</h6>
+                            <p class="card-desc">{{ product.price_text }}</p>
+
                             <div class="card-actions">
-                                <b-button class="card-btn primary">Chọn mẫu</b-button>
-                                <b-button class="card-btn outline">Xem chi tiết</b-button>
+                                <b-button class="card-btn primary">
+                                    Chọn mẫu
+                                </b-button>
+
+                                <b-button class="card-btn outline"
+                                    :to="{ name: 'CardDetail', params: { id: product.id } }" variant="link">
+                                    Xem chi tiết
+                                </b-button>
                             </div>
                         </b-card>
                     </b-col>
                 </b-row>
+                <!-- Không có sản phẩm -->
+                <div v-else class="empty-state text-center">
+                    <i class="bi bi-box-seam empty-icon"></i>
+                    <h5>Không có sản phẩm</h5>
+                    <p>Danh mục này hiện chưa có mẫu thiệp nào.</p>
+                </div>
 
                 <!-- Pagination -->
                 <div class="pagination-wrapper" v-if="totalPages > 1">
@@ -65,64 +79,72 @@
 
 
 <script>
+import productsData from "@/services/products.json"
+import categoriesData from "@/services/categories.json"
+
 export default {
     name: "Collection",
+
     data() {
         return {
-            selectedCategory: "KTS",
+            products: [],
+            categories: [],
+            selectedCategory: null,
             currentPage: 1,
-            perPage: 6, // 👈 số thiệp mỗi trang
-
-            categories: [
-                { name: "KTS" },
-                { name: "THIỆP CHỮ NHẬT" },
-                { name: "THIỆP ĐỨNG" },
-                { name: "THIỆP STYLE HÀN QUỐC" },
-                { name: "THIỆP GẤP 3" },
-                { name: "THIỆP LUXURY" },
-                { name: "THIỆP NHỰA TRONG" },
-                { name: "THIỆP POP UP" },
-                { name: "PHÔI THIỆP CƯỚI" },
-                { name: "THIỆP CHÚC MỪNG" },
-                { name: "BÌ LÌ XÌ" }
-            ],
-
-            images: {
-                KTS: [
-                    "https://thiepcuoisieutoc.com/uploads/product/xl-astvan-7289-1757498382.webp",
-                    "https://thiepcuoisieutoc.com/uploads/product/xl-astvan-7289-1757498382.webp",
-                    "https://thiepcuoisieutoc.com/uploads/product/xl-astvan-7289-1757498382.webp",
-                    "https://thiepcuoisieutoc.com/uploads/product/xl-astvan-7289-1757498382.webp",
-                    "https://thiepcuoisieutoc.com/uploads/product/xl-astvan-7289-1757498382.webp",
-                    "https://thiepcuoisieutoc.com/uploads/product/xl-astvan-7289-1757498382.webp",
-                    "https://thiepcuoisieutoc.com/uploads/product/xl-astvan-7289-1757498382.webp",
-                    "https://thiepcuoisieutoc.com/uploads/product/xl-astvan-7289-1757498382.webp",
-                ]
-            }
+            perPage: 6
         }
     },
 
     computed: {
-        filteredImages() {
-            const imgs = this.images[this.selectedCategory] || []
+        filteredProducts() {
+            let list = this.products
+
+            if (this.selectedCategory !== null) {
+                list = list.filter(
+                    p => Number(p.category_id) === Number(this.selectedCategory)
+                )
+            }
+
             const start = (this.currentPage - 1) * this.perPage
-            return imgs.slice(start, start + this.perPage)
+            return list.slice(start, start + this.perPage)
         },
 
         totalPages() {
-            const total = this.images[this.selectedCategory]?.length || 0
+            const total = this.selectedCategory !== null
+                ? this.products.filter(
+                    p => Number(p.category_id) === Number(this.selectedCategory)
+                ).length
+                : this.products.length
+
             return Math.ceil(total / this.perPage)
         }
     },
 
     watch: {
         selectedCategory() {
-            this.currentPage = 1 // reset page khi đổi danh mục
+            this.currentPage = 1
         }
-    }
-}
+    },
 
+    methods: {
+        selectCategory(id) {
+            this.selectedCategory = id
+            this.currentPage = 1
+        }
+    },
+
+
+    created() {
+        this.products = productsData.data
+        this.categories = categoriesData.data
+
+        // chọn category đầu tiên
+        this.selectedCategory = this.categories[0]?.id ?? null
+    }
+
+}
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto&display=swap');
@@ -336,6 +358,27 @@ export default {
     cursor: not-allowed;
 }
 
+.empty-state {
+    padding: 3rem 1rem;
+    color: #8B5E3C;
+}
+
+.empty-icon {
+    font-size: 48px;
+    color: #b76e79;
+    margin-bottom: 12px;
+}
+
+.empty-state h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+}
+
+.empty-state p {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
     .collection-section {
@@ -350,6 +393,4 @@ export default {
         transform: none;
     }
 }
-
-
 </style>

@@ -20,6 +20,16 @@ Vue.use(Router)
 
 export default new Router({
     mode: 'history',
+
+    scrollBehavior(to, from, savedPosition) {
+        // Khi dùng nút Back/Forward
+        if (savedPosition) {
+            return savedPosition
+        }
+
+        // Luôn cuộn về đầu trang khi đổi route
+        return { x: 0, y: 0 }
+    },
     routes: [
         {
             path: '/',
@@ -30,6 +40,12 @@ export default new Router({
                 { path: 'services', name: 'Services', component: Services },
                 { path: 'collection', name: 'Collection', component: Collection },
                 { path: 'contact', name: 'Contact', component: Contact },
+                {
+                    path: 'collection/:id',
+                    name: 'CardDetail',
+                    component: () => import('@/views/CardDetail.vue'),
+                    props: true
+                }
             ]
         },
         {

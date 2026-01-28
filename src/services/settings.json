@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "sheet": "settings",
+  "total": 1,
+  "data": [
+    {
+      "site_name": "Thiệp Cưới Minh Đức",
+      "slogan": "Tinh tế trong từng lời mời",
+      "hotline": 901234567,
+      "zalo": 901234567,
+      "facebook": "https://facebook.com/thiepcuoi",
+      "address": "Huế, Việt Nam",
+      "working_time": "8:00 - 21:00",
+      "primary_color": "#b76e79",
+      "secondary_color": "#8B5E3C"
+    }
+  ]
+}

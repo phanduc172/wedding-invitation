@@ -22,21 +22,35 @@
                 </div>
             </b-col>
 
-            <!-- Image -->
-            <b-col md="6" class="text-center">
-                <b-img src="https://thiepcuoisieutoc.com/uploads/product/xl-astvan-7290-1757497631.webp" fluid
-                    alt="Thiệp cưới Minh Đức" class="hero-image" />
+          <!-- Image -->
+            <b-col md="6" class="text-center" v-if="banner">
+                <b-img :src="banner.image" fluid alt="Thiệp cưới Minh Đức" class="hero-image" />
             </b-col>
         </b-row>
     </section>
 </template>
 
-
 <script>
+import bannersData from "@/services/banners.json"
+
 export default {
-    name: 'Section'
+    name: "Section",
+
+    data() {
+        return {
+            banner: null
+        }
+    },
+
+    created() {
+        // lấy banner đầu tiên đang active
+        this.banner = bannersData.data.find(b => b.active) || null
+        console.log("Banner:", this.banner)
+    }
 }
 </script>
+
+
 
 <style scoped>
 /* Font sang trọng */
@@ -131,6 +145,7 @@ export default {
     border-radius: 22px;
     box-shadow: 0 12px 26px rgba(139, 94, 60, 0.25);
     transition: transform 0.5s ease;
+    padding: 1rem;
 }
 
 .hero-image:hover {

@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "sheet": "banners",
+  "total": 1,
+  "data": [
+    {
+      "id": 1,
+      "image": "/images/Minh Đức - Logo.png",
+      "title": "Thiệp cưới 2026",
+      "link": "/collections",
+      "position": "home",
+      "active": true
+    }
+  ]
+}

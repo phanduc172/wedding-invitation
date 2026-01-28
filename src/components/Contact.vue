@@ -14,21 +14,21 @@
                 <b-card class="contact-card h-100">
                     <b-form @submit.prevent="submit">
                         <b-form-group label="👤 Họ & tên">
-                            <b-form-input v-model="name" required placeholder="Thiệp cưới Minh Đức" />
+                            <b-form-input v-model="form.name" placeholder="Thiệp cưới Minh Đức" />
                         </b-form-group>
 
                         <b-form-group label="📱 Số điện thoại / Zalo">
-                            <b-form-input v-model="phone" required placeholder="0383 181 115" />
+                            <b-form-input v-model="form.phone" placeholder="0383 181 115" />
                         </b-form-group>
 
                         <b-form-group label="✍️ Yêu cầu của bạn">
-                            <b-form-textarea v-model="message" rows="3"
+                            <b-form-textarea v-model="form.message" rows="3"
                                 placeholder="Mẫu thiệp, số lượng, ngày cần..." />
                         </b-form-group>
 
                         <div class="text-center mt-4">
-                            <b-button type="submit" class="contact-btn">
-                                💌 Gửi yêu cầu
+                            <b-button type="submit" class="contact-btn" :disabled="submitting">
+                                {{ submitting ? "Đang gửi..." : "💌 Gửi yêu cầu" }}
                             </b-button>
                         </div>
                     </b-form>
@@ -68,24 +68,93 @@
         </b-row>
     </section>
 </template>
-
-
 <script>
+import Swal from "sweetalert2"
+
 export default {
-    name: 'Contact',
+    name: "Contact",
+
     data() {
-        return { name: '', phone: '', message: '' }
+        return {
+            form: {
+                name: "",
+                phone: "",
+                message: ""
+            },
+            submitting: false
+        }
     },
+
     methods: {
-        submit() {
-            alert(`Cảm ơn ${this.name}! Chúng tôi sẽ liên hệ qua ${this.phone}`)
-            this.name = ''
-            this.phone = ''
-            this.message = ''
+        getValidateError() {
+            const { name, phone } = this.form
+            const cleanPhone = phone.replace(/\s/g, "")
+            const phoneRegex = /^(0|\+84)[0-9]{9,10}$/
+
+            if (!name.trim()) {
+                return "Vui lòng nhập họ và tên"
+            }
+
+            if (!cleanPhone) {
+                return "Vui lòng nhập số điện thoại"
+            }
+
+            if (!phoneRegex.test(cleanPhone)) {
+                return "Số điện thoại không hợp lệ"
+            }
+
+            return null // ✅ hợp lệ
+        },
+
+        async submit() {
+            const errorMessage = this.getValidateError()
+
+            if (errorMessage) {
+                await Swal.fire({
+                    icon: "warning",
+                    title: "Thông tin chưa hợp lệ",
+                    text: errorMessage,
+                    confirmButtonColor: "#b76e79"
+                })
+                return
+            }
+
+            this.submitting = true
+
+            try {
+                // 👉 sau này gọi API tại đây
+                // await axios.post("/api/contact", this.form)
+
+                await Swal.fire({
+                    icon: "success",
+                    title: "Gửi thành công 💌",
+                    html: `
+                        <p>Cảm ơn <strong>${this.form.name}</strong></p>
+                        <p>Thiệp cưới Minh Đức sẽ liên hệ qua số <strong>${this.form.phone}</strong></p>
+                    `,
+                    confirmButtonColor: "#b76e79"
+                })
+
+                this.form = {
+                    name: "",
+                    phone: "",
+                    message: ""
+                }
+            } catch {
+                Swal.fire({
+                    icon: "error",
+                    title: "Có lỗi xảy ra",
+                    text: "Vui lòng thử lại sau",
+                    confirmButtonColor: "#b76e79"
+                })
+            } finally {
+                this.submitting = false
+            }
         }
     }
 }
 </script>
+
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500&display=swap');
 
