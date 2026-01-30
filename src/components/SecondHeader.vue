@@ -137,21 +137,60 @@ export default {
     width: 55%;
 }
 
-/* Mobile */
+/* =========================
+   MOBILE & TABLET
+========================= */
 @media (max-width: 991px) {
-    .wedding-menu {
-        background: #fffaf5;
-        border-radius: 18px;
-        padding: 0.5rem 0;
+
+    /* Navbar tổng */
+    .second-header {
+        padding: 0.6rem 0.8rem;
+        border-radius: 0 0 22px 22px;
     }
 
+    /* Nút hamburger */
+    .navbar-toggler {
+        border: none;
+        outline: none;
+        box-shadow: none;
+    }
+
+    /* Box menu xổ xuống */
+    .wedding-menu {
+        margin-top: 14px;
+        /* FIX lỗi sát trên */
+        background: #fffaf5;
+        border-radius: 22px;
+        padding: 14px 10px;
+        box-shadow: 0 10px 25px rgba(139, 94, 60, 0.18);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    /* Item menu */
     .nav-link {
         text-align: center;
-        padding: 0.9rem 1rem;
+        padding: 14px 16px;
+        font-size: 17px;
+        border-radius: 16px;
+        background: transparent;
     }
 
+    /* Hover / tap */
+    .nav-link:hover {
+        background: rgba(183, 110, 121, 0.12);
+    }
+
+    /* Active */
+    .router-link-exact-active {
+        background: linear-gradient(135deg, #f6e6dc, #fffaf5);
+        font-weight: 600;
+    }
+
+    /* Tắt underline */
     .nav-link::after {
-        display: none;
+        display: none !important;
     }
 }
 </style>

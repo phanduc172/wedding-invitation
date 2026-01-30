@@ -1,44 +1,46 @@
 <template>
-    <header class="custom-header py-2 border-bottom d-flex justify-content-between align-items-center">
-        <!-- Bên trái: Hotline -->
-        <div class="contact-info ml-4">
-            <a href="tel:0383181115" class="hotline-card d-flex align-items-center">
-                <span class="hotline-icon-wrap">
-                    <i class="bi bi-telephone-fill"></i>
-                </span>
-                <div class="hotline-text">
-                    <small>Hotline tư vấn</small>
-                    <strong>0383 181 115</strong>
-                </div>
-            </a>
+    <header class="custom-header py-2 border-bottom">
+        <div class="header-inner d-flex justify-content-between align-items-center">
+
+            <!-- Bên trái: Hotline -->
+            <div class="contact-info ml-4">
+                <a href="tel:0383181115" class="hotline-card d-flex align-items-center">
+                    <span class="hotline-icon-wrap">
+                        <i class="bi bi-telephone-fill"></i>
+                    </span>
+                    <div class="hotline-text">
+                        <small>Hotline tư vấn</small>
+                        <strong>0383 181 115</strong>
+                    </div>
+                </a>
+            </div>
+
+
+
+            <!-- Ở giữa: Tên thương hiệu -->
+            <div class="brand-name text-center">
+                Thiệp Cưới Minh Đức
+            </div>
+
+            <!-- Bên phải: Liên hệ mạng xã hội -->
+            <div class="social-icons mr-4 d-flex align-items-center">
+                <a href="https://fb.com/thiepcuoiminhduc17" target="_blank" class="social-btn facebook">
+                    <i class="bi bi-facebook"></i>
+                </a>
+
+                <a href="#" target="_blank" class="social-btn instagram">
+                    <i class="bi bi-instagram"></i>
+                </a>
+
+                <a href="#" target="_blank" class="social-btn youtube">
+                    <i class="bi bi-youtube"></i>
+                </a>
+
+                <a href="#" target="_blank" class="social-btn pinterest">
+                    <i class="bi bi-pinterest"></i>
+                </a>
+            </div>
         </div>
-
-
-
-        <!-- Ở giữa: Tên thương hiệu -->
-        <div class="brand-name text-center">
-            Thiệp Cưới Minh Đức
-        </div>
-
-        <!-- Bên phải: Liên hệ mạng xã hội -->
-        <div class="social-icons mr-4 d-flex align-items-center">
-            <a href="https://fb.com/thiepcuoiminhduc17" target="_blank" class="social-btn facebook">
-                <i class="bi bi-facebook"></i>
-            </a>
-
-            <a href="#" target="_blank" class="social-btn instagram">
-                <i class="bi bi-instagram"></i>
-            </a>
-
-            <a href="#" target="_blank" class="social-btn youtube">
-                <i class="bi bi-youtube"></i>
-            </a>
-
-            <a href="#" target="_blank" class="social-btn pinterest">
-                <i class="bi bi-pinterest"></i>
-            </a>
-        </div>
-
     </header>
 </template>
 
@@ -51,6 +53,12 @@ export default {
 <style scoped>
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@600&display=swap');
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
 .custom-header {
     background: linear-gradient(to right, #fff, #fdf6f0);
@@ -226,5 +234,60 @@ export default {
 
 .social-btn.pinterest:hover {
     background: linear-gradient(135deg, #bd081c, #8c0615);
+}
+
+
+@media (max-width: 767px) {
+    .header-inner {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .brand-name {
+        font-size: 26px;
+        margin: 4px 0;
+        text-align: center;
+    }
+
+    .contact-info {
+        order: 2;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .hotline-card {
+        width: 90%;
+        max-width: 360px;
+        justify-content: center;
+        padding: 10px 14px;
+    }
+
+    .social-icons {
+        display: none !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .social-icons {
+        display: none;
+    }
+
+    .brand-name {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 767px) {
+    .custom-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: linear-gradient(to right, #fff, #fdf6f0);
+    }
+
+    .mobile-menu {
+        margin-top: 16px;
+    }
 }
 </style>
