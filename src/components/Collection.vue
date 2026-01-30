@@ -1,5 +1,5 @@
 <template>
-    <section id="mau" class="collection-section">
+    <section class="collection-section">
         <div class="collection-header text-center">
             <span class="section-badge">BỘ SƯU TẬP NỔI BẬT</span>
 
@@ -22,9 +22,9 @@
             <!-- Sidebar -->
             <b-col md="3" class="category-sidebar">
                 <ul class="category-list list-unstyled">
-                    <li v-for="category in categories" :key="category.id"
+                    <li v-for="(category, index) in categories" :key="category.id"
                         :class="{ active: selectedCategory === category.id }" @click="selectCategory(category.id)">
-                        {{ category.name }}
+                        {{ index + 1 }}. {{ category.name }}
                     </li>
                 </ul>
             </b-col>
@@ -32,18 +32,35 @@
             <!-- Collection -->
             <b-col md="9">
                 <b-row v-if="filteredProducts.length">
-                    <b-col v-for="product in filteredProducts" :key="product.id" cols="12" md="6" lg="4">
-                        <b-card :img-src="product.thumbnail" img-top class="custom-card h-100">
-                            <h6 class="mt-2 fw-bold">{{ product.title }}</h6>
-                            <p class="card-desc">{{ product.price_text }}</p>
+                    <b-col v-for="(product, index) in filteredProducts" :key="product.id || index" cols="12" sm="12"
+                        md="6" lg="4" xl="3" class="py-3">
+                        <b-card :img-src="driveToThumbnail(product.thumbnail, 1000)" img-top
+                            class="custom-card h-100 text-center">
+                            <!-- BADGE CODE -->
+                            <span class="card-badge" v-if="product.code">
+                                {{ product.code }}
+                            </span>
 
-                            <div class="card-actions">
-                                <b-button class="card-btn primary">
-                                    Chọn mẫu
-                                </b-button>
+                            <!-- TITLE -->
+                            <h6 class="card-title mt-3">
+                                {{ product.title }}
+                            </h6>
 
-                                <b-button class="card-btn outline"
-                                    :to="{ name: 'CardDetail', params: { id: product.id } }" variant="link">
+                            <div class="price-box center">
+                                <span v-if="product.sale_price && product.sale_price < product.price" class="price-old">
+                                    {{ formatPrice(product.price) }}đ
+                                </span>
+
+                                <span class="price-sale">
+                                    {{ formatPrice(product.sale_price || product.price) }}đ
+                                    <small>/ thiệp</small>
+                                </span>
+                            </div>
+
+                            <!-- ACTION -->
+                            <div class="card-actions mt-3">
+                                <b-button class="card-btn primary"
+                                    @click="$router.push({ name: 'CardDetail', params: { id: product.id } })">
                                     Xem chi tiết
                                 </b-button>
                             </div>
@@ -55,20 +72,43 @@
                     <i class="bi bi-box-seam empty-icon"></i>
                     <h5>Không có sản phẩm</h5>
                     <p>Danh mục này hiện chưa có mẫu thiệp nào.</p>
+
+                </div>
+                <div class="text-center mt-4" v-if="limit">
+                    <b-button class="card-btn primary" :to="{ name: 'Collection' }">
+                        Xem tất cả thiệp cưới →
+                    </b-button>
                 </div>
 
                 <!-- Pagination -->
-                <div class="pagination-wrapper" v-if="totalPages > 1">
-                    <button class="page-btn" :disabled="currentPage === 1" @click="currentPage--">
+                <div class="pagination-wrapper" v-if="!limit && totalPages > 1">
+                    <!-- Prev -->
+                    <button class="page-btn" :disabled="currentPage === 1" @click="goPage(currentPage - 1)">
                         ‹
                     </button>
 
-                    <button v-for="page in totalPages" :key="page"
-                        :class="['page-btn', { active: currentPage === page }]" @click="currentPage = page">
+                    <!-- First -->
+                    <button v-if="pages[0] !== 1" class="page-btn" @click="goPage(1)">
+                        1
+                    </button>
+
+                    <span v-if="pages[0] > 2" class="page-ellipsis">…</span>
+
+                    <!-- Pages -->
+                    <button v-for="page in pages" :key="page" :class="['page-btn', { active: currentPage === page }]"
+                        @click="goPage(page)">
                         {{ page }}
                     </button>
 
-                    <button class="page-btn" :disabled="currentPage === totalPages" @click="currentPage++">
+                    <span v-if="pages[pages.length - 1] < totalPages - 1" class="page-ellipsis">…</span>
+
+                    <!-- Last -->
+                    <button v-if="pages[pages.length - 1] !== totalPages" class="page-btn" @click="goPage(totalPages)">
+                        {{ totalPages }}
+                    </button>
+
+                    <!-- Next -->
+                    <button class="page-btn" :disabled="currentPage === totalPages" @click="goPage(currentPage + 1)">
                         ›
                     </button>
                 </div>
@@ -81,6 +121,8 @@
 <script>
 import productsData from "@/services/products.json"
 import categoriesData from "@/services/categories.json"
+import { formatPrice } from '@/ultis/format'
+
 
 export default {
     name: "Collection",
@@ -91,11 +133,29 @@ export default {
             categories: [],
             selectedCategory: null,
             currentPage: 1,
-            perPage: 6
+            perPage: 12
+        }
+    },
+
+    props: {
+        limit: {
+            type: Number,
+            default: null // null = không giới hạn (trang /collection)
         }
     },
 
     computed: {
+        pages() {
+            const range = 2 // số trang trước & sau current
+            const start = Math.max(1, this.currentPage - range)
+            const end = Math.min(this.totalPages, this.currentPage + range)
+
+            const pages = []
+            for (let i = start; i <= end; i++) {
+                pages.push(i)
+            }
+            return pages
+        },
         filteredProducts() {
             let list = this.products
 
@@ -105,11 +165,19 @@ export default {
                 )
             }
 
+            // 👉 TRANG HOME: chỉ lấy limit sản phẩm
+            if (this.limit) {
+                return list.slice(0, this.limit)
+            }
+
+            // 👉 TRANG /collection: phân trang bình thường
             const start = (this.currentPage - 1) * this.perPage
             return list.slice(start, start + this.perPage)
         },
 
         totalPages() {
+            if (this.limit) return 1
+
             const total = this.selectedCategory !== null
                 ? this.products.filter(
                     p => Number(p.category_id) === Number(this.selectedCategory)
@@ -117,6 +185,13 @@ export default {
                 : this.products.length
 
             return Math.ceil(total / this.perPage)
+        },
+
+        productsWithImages() {
+            return this.products.map(p => ({
+                ...p,
+                thumbnail_fixed: this.driveToThumbnail(p.thumbnail, 1000)
+            }))
         }
     },
 
@@ -127,10 +202,31 @@ export default {
     },
 
     methods: {
+        formatPrice,
         selectCategory(id) {
             this.selectedCategory = id
             this.currentPage = 1
+        },
+        goPage(page) {
+            if (page < 1 || page > this.totalPages) return
+            this.currentPage = page
+            window.scrollTo({ top: 0, behavior: "smooth" })
+        },
+
+        driveToThumbnail(url, size = 1000) {
+            if (!url) return ''
+
+            // bắt cả 2 dạng: /d/ID và id=ID
+            const match =
+                url.match(/\/d\/([^/]+)/) ||
+                url.match(/id=([^&]+)/)
+
+            if (!match) return url
+
+            const fileId = match[1]
+            return `https://drive.google.com/thumbnail?id=${fileId}&sz=w${size}`
         }
+
     },
 
 
@@ -148,6 +244,104 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto&display=swap');
+
+/* CARD */
+.custom-card {
+    border: none;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(139, 94, 60, 0.18);
+    transition: all 0.35s ease;
+    background: #fff;
+}
+
+.custom-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(139, 94, 60, 0.3);
+}
+
+/* IMAGE */
+.custom-card img {
+    height: 220px;
+    object-fit: cover;
+}
+
+/* BADGE */
+.card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #b76e79, #8B5E3C);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* TITLE */
+.card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #8B5E3C;
+    line-height: 1.4;
+}
+
+/* PRICE */
+.price-box {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: center;
+    align-items: center;
+    column-gap: 14px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+}
+
+/* Giá cũ */
+.price-old {
+    font-size: 16px !important;
+    color: #b5a197;
+    text-decoration: line-through;
+    white-space: nowrap;
+}
+
+/* Giá sale */
+.price-sale {
+    font-size: 22px !important;
+    font-weight: 700;
+    color: #b76e79;
+    white-space: nowrap;
+}
+
+.price-sale small {
+    font-size: 15px !important;
+    font-weight: 400;
+    color: #8B5E3C;
+}
+
+/* ACTION */
+.card-actions {
+    margin-top: auto;
+}
+
+.card-btn.primary {
+    width: 30%;
+    border-radius: 30px;
+    padding: 0.6rem 1rem;
+    font-size: 14px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #b76e79, #8B5E3C);
+    border: none;
+    color: #fff;
+}
+
+.card-btn.primary:hover {
+    box-shadow: 0 8px 18px rgba(183, 110, 121, 0.45);
+    transform: translateY(-2px);
+}
 
 .collection-section {
     background: linear-gradient(135deg, #fffaf5, #f6e6dc);
@@ -379,7 +573,84 @@ export default {
     opacity: 0.8;
 }
 
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    /* 👈 không tràn mobile */
+    margin-top: 2rem;
+}
+
+.page-btn {
+    min-width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    color: #8B5E3C;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #b76e79;
+    color: #fff;
+}
+
+.page-btn.active {
+    background: linear-gradient(135deg, #b76e79, #8B5E3C);
+    color: #fff;
+}
+
+.page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.page-ellipsis {
+    padding: 0 6px;
+    color: #8B5E3C;
+    font-weight: 600;
+}
+
+.price-box {
+    margin: 6px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.price-old {
+    font-size: 13px;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.price-sale {
+    font-size: 16px;
+    font-weight: 700;
+    color: #b76e79;
+    /* hồng nâu sang */
+}
+
+.price-sale small {
+    font-size: 12px;
+    font-weight: 400;
+    color: #6b4226;
+}
+
 /* Mobile */
+@media (max-width: 576px) {
+    .price-box {
+        grid-auto-flow: row;
+        row-gap: 4px;
+    }
+}
+
 @media (max-width: 768px) {
     .collection-section {
         padding: 3rem 1.5rem;

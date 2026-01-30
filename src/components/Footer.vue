@@ -1,18 +1,16 @@
 <template>
-    <div class="custom-footer">
-        <b-footer class="custom-footer text-center mt-3">
-            <div class="footer-content">
-                <p class="mb-2">
-                    💌 <span class="brand">Thiệp cưới Minh Đức</span> – Thiết kế & In ấn chuyên nghiệp
-                </p>
-                <p class="mb-1">
-                    📞 <a href="tel:0383181115" class="footer-link">0383.181.115</a> •
-                    🌐 <a href="https://fb.com/thiepcuoiminhduc17" target="_blank" class="footer-link">Facebook</a> •
-                    ✉️ <a href="mailto:thiepcuoiminhduc17@gmail.com" class="footer-link">Email</a>
-                </p>
-            </div>
-        </b-footer>
-    </div>
+    <footer class="p-4 custom-footer text-center mt-3">
+        <div class="footer-content">
+            <p class="mb-2">
+                💌 <span class="brand">Thiệp cưới Minh Đức</span> – Thiết kế & In ấn chuyên nghiệp
+            </p>
+            <p class="mb-1">
+                📞 <a href="tel:0383181115" class="footer-link">0383.181.115</a> •
+                🌐 <a href="https://fb.com/thiepcuoiminhduc17" target="_blank" class="footer-link">Facebook</a> •
+                ✉️ <a href="mailto:thiepcuoiminhduc17@gmail.com" class="footer-link">Email</a>
+            </p>
+        </div>
+    </footer>
 </template>
 
 <script>
