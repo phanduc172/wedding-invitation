@@ -1,7 +1,7 @@
 <template>
     <div>
         <Section />
-        <Collection />
+        <Collection :limit="8" />
         <Services />
         <About />
         <Contact />

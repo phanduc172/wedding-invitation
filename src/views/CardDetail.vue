@@ -1,14 +1,13 @@
 <template>
-   <section class="card-detail-section" v-if="card">
+    <section class="card-detail-section" v-if="card">
         <b-container>
             <b-row align-v="center">
                 <!-- Image -->
                 <b-col md="6" class="mb-4">
                     <div class="card-image-wrapper">
-                        <img :src="card.image" :alt="card.title" />
+                        <b-img :src="driveToThumbnail(card.image, 1200)" fluid alt="Thiệp cưới" />
                     </div>
                 </b-col>
-
                 <!-- Content -->
                 <b-col md="6">
                     <span class="detail-badge">MẪU THIỆP CƯỚI</span>
@@ -16,7 +15,16 @@
                     <h1 class="card-title">
                         {{ card.title }}
                     </h1>
+                    <!-- PRICE -->
+                    <div class="detail-price">
+                        <span class="price-old" v-if="card.price && card.sale_price">
+                            {{ formatPrice(card.price) }}đ
+                        </span>
 
+                        <span class="price-main">
+                            {{ formatPrice(card.sale_price || card.price) }}đ / thiệp
+                        </span>
+                    </div>
                     <div class="title-divider">
                         <i class="bi bi-heart-fill"></i>
                     </div>
@@ -49,6 +57,7 @@
 
 <script>
 import productsData from "@/services/products.json"
+import { formatPrice } from '../ultis/format'
 
 export default {
     name: "CardDetail",
@@ -56,6 +65,21 @@ export default {
     data() {
         return {
             card: null
+        }
+    },
+    methods: {
+        formatPrice,
+        driveToThumbnail(url, size = 1200) {
+            if (!url) return ''
+
+            const match =
+                url.match(/\/d\/([^/]+)/) ||
+                url.match(/id=([^&]+)/)
+
+            if (!match) return url
+
+            const fileId = match[1]
+            return `https://drive.google.com/thumbnail?id=${fileId}&sz=w${size}`
         }
     },
 
@@ -76,7 +100,9 @@ export default {
             image: product.thumbnail,
             desc: product.description || "Mẫu thiệp cưới thiết kế tinh tế, sang trọng.",
             style: product.style || "Thanh lịch – Hiện đại",
-            size: product.size || "12 x 18 cm"
+            size: product.size || "12 x 18 cm",
+            price: product.price,
+            sale_price: product.sale_price
         }
     }
 }
@@ -207,6 +233,57 @@ export default {
 
 .detail-btn.outline:hover {
     background: rgba(183, 110, 121, 0.15);
+}
+
+/* PRICE */
+.detail-price {
+    margin: 0.8rem 0 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.price-old {
+    font-size: 1rem;
+    color: #b8a08f;
+    text-decoration: line-through;
+}
+
+.price-sale {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #b76e79;
+    font-family: 'Playfair Display', serif;
+}
+
+.price-sale small {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #8B5E3C;
+}
+
+.detail-price {
+    margin: 1.2rem 0 1.8rem;
+}
+
+.price-old {
+    text-decoration: line-through;
+    color: #b8a59a;
+    font-size: 0.95rem;
+    margin-right: 10px;
+}
+
+.price-main,
+.price-sale {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #b76e79;
+}
+
+.price-sale small {
+    font-size: 0.9rem;
+    color: #8B5E3C;
 }
 
 /* Mobile */
