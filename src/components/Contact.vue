@@ -54,7 +54,12 @@
 
                     <p>
                         <i class="bi bi-geo-alt"></i>
-                        <strong class="me-1">Địa chỉ: </strong>36 Konh Hư, A Lưới 2, TP. Huế
+                        <strong class="me-1">Địa chỉ:</strong>
+
+                        <a href="https://maps.app.goo.gl/kQ1ggrbgD27HkaKg9" target="_blank" rel="noopener"
+                            class="map-link">
+                            36 Konh Hư, A Lưới 2, TP. Huế
+                        </a>
                     </p>
                 </div>
 
@@ -249,19 +254,119 @@ export default {
 
 /* Map */
 .map-box {
-    margin-top: 1.5rem;
     width: 100%;
     height: 220px;
-    /* 👈 chiều cao chuẩn, không tràn */
-    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    border: 2px solid #f1e4da;
+}
+
+.map-link {
+    display: inline-block;
+    padding: 4px 0;
 }
 
 .map-box iframe {
     width: 100%;
     height: 100%;
-    border: 0;
+}
+
+/* =========================
+   📱 Extra small (≤576px)
+   Điện thoại nhỏ
+   ========================= */
+@media (max-width: 576px) {
+    .contact-section {
+        padding: 2rem 1.2rem;
+        margin: 2rem 0.8rem;
+    }
+
+    .contact-title {
+        font-size: 22px;
+        line-height: 1.3;
+    }
+
+    .contact-desc {
+        font-size: 14px;
+    }
+
+    .contact-card {
+        padding: 1.4rem;
+    }
+
+    .contact-btn {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 15px;
+    }
+
+    .contact-info-box {
+        padding: 1.2rem;
+    }
+
+    .contact-info-box p {
+        font-size: 14px;
+        flex-wrap: wrap;
+        line-height: 1.5;
+    }
+
+    .map-box {
+        height: 180px;
+    }
+
+    .contact-info-box a {
+        font-style: 13px;
+    }
+}
+
+
+/* =========================
+   📱 Small (≤768px)
+   Điện thoại lớn / Tablet dọc
+   ========================= */
+@media (max-width: 768px) {
+    .contact-section {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .contact-title {
+        font-size: 24px;
+    }
+
+    .contact-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .map-box {
+        height: 200px;
+    }
+}
+
+
+/* =========================
+   📲 Medium (≤992px)
+   Tablet ngang
+   ========================= */
+@media (max-width: 992px) {
+    .contact-section {
+        padding: 3rem 2rem;
+    }
+
+    .map-box {
+        height: 240px;
+    }
+}
+
+
+/* =========================
+   💻 Large (≥1200px)
+   Desktop lớn
+   ========================= */
+@media (min-width: 1200px) {
+    .contact-section {
+        padding: 4rem 3rem;
+    }
+
+    .map-box {
+        height: 280px;
+    }
 }
 </style>

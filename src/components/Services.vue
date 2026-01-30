@@ -167,14 +167,88 @@ export default {
     line-height: 1.6;
 }
 
-/* Mobile */
-@media (max-width: 768px) {
+/* =====================
+   Mobile nhỏ (<=576px)
+   ===================== */
+@media (max-width: 576px) {
     .services-section {
-        padding: 3rem 1.5rem;
+        padding: 2.5rem 1.2rem;
+        margin: 2rem 0.8rem;
+        border-radius: 22px;
+    }
+
+    .services-header {
+        margin-bottom: 2.2rem;
+    }
+
+    .services-title {
+        font-size: 1.7rem;
+    }
+
+    .services-desc {
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+
+    .title-divider::before,
+    .title-divider::after {
+        width: 40px;
+    }
+
+    .service-card {
+        padding: 2rem 1.5rem;
+        border-radius: 22px;
+    }
+
+    .service-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        margin-bottom: 1rem;
+    }
+
+    .service-title {
+        font-size: 1.05rem;
+    }
+
+    .service-text {
+        font-size: 0.9rem;
+    }
+}
+
+/* =====================
+   Tablet (577px – 991px)
+   ===================== */
+@media (min-width: 577px) and (max-width: 991px) {
+    .services-section {
+        padding: 3rem 2rem;
     }
 
     .services-title {
         font-size: 2rem;
+    }
+
+    .service-card {
+        padding: 2.2rem 1.8rem;
+    }
+
+    .service-icon {
+        width: 66px;
+        height: 66px;
+        font-size: 28px;
+    }
+}
+
+/* =====================
+   Desktop lớn (>=1200px)
+   ===================== */
+@media (min-width: 1200px) {
+    .services-section {
+        padding: 4.5rem 3rem;
+    }
+
+    .services-title {
+        font-size: 2.4rem;
     }
 }
 </style>

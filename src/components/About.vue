@@ -28,8 +28,10 @@ export default {
 .about-section {
     background: linear-gradient(135deg, #fffaf5, #f6e6dc);
     border-radius: 16px;
-    padding: 3rem 1rem;
+    padding: 4rem 1rem 3rem;
+    margin-top: 2rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    scroll-margin-top: 90px;
 }
 
 .about-title {
@@ -76,5 +78,51 @@ export default {
 .about-list li:hover {
     transform: translateX(5px);
     color: #b76e79;
+}
+
+@media (max-width: 576px) {
+    .about-section {
+        padding: 3rem 1rem 2.5rem;
+        border-radius: 12px;
+    }
+
+    .about-title {
+        font-size: 22px;
+    }
+
+    .about-title::after {
+        width: 60%;
+        height: 2px;
+    }
+
+    .about-desc {
+        font-size: 15px;
+        line-height: 1.6;
+        padding: 0 0.5rem;
+    }
+
+    .brand {
+        font-size: 20px;
+    }
+
+    .about-list li {
+        font-size: 15px;
+        margin-bottom: 0.6rem;
+    }
+
+    .about-list li:hover {
+        transform: none;
+    }
+}
+
+@media (max-width: 992px) {
+    .about-title {
+        font-size: 24px;
+    }
+
+    .about-desc {
+        font-size: 15.5px;
+        max-width: 720px;
+    }
 }
 </style>

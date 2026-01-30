@@ -22,7 +22,7 @@
                 </div>
             </b-col>
 
-          <!-- Image -->
+            <!-- Image -->
             <b-col md="6" class="text-center" v-if="banner">
                 <b-img :src="banner.image" fluid alt="Thiệp cưới Minh Đức" class="hero-image" />
             </b-col>
@@ -152,7 +152,20 @@ export default {
     transform: scale(1.05);
 }
 
-/* Mobile */
+
+/* =========================
+   📱 Extra small (≤576px)
+   Điện thoại nhỏ
+   ========================= */
+@media (max-width: 576px) {
+
+}
+
+
+/* =========================
+   📱 Small (≤768px)
+   Điện thoại lớn / Tablet dọc
+   ========================= */
 @media (max-width: 768px) {
     .hero-section {
         padding: 3rem 1.5rem;
@@ -164,7 +177,7 @@ export default {
     }
 
     .hero-title {
-        font-size: 2.1rem;
+        font-size: 2rem;
     }
 
     .hero-image {
@@ -175,4 +188,25 @@ export default {
         justify-content: center;
     }
 }
+
+
+/* =========================
+   📲 Medium (≤992px)
+   Tablet ngang / Laptop nhỏ
+   ========================= */
+@media (max-width: 992px) {}
+
+
+/* =========================
+   💻 Large (≤1200px)
+   Desktop thường
+   ========================= */
+@media (max-width: 1200px) {}
+
+
+/* =========================
+   🖥 Extra Large (≥1200px)
+   Màn hình lớn
+   ========================= */
+@media (min-width: 1200px) {}
 </style>

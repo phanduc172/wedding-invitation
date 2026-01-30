@@ -19,7 +19,7 @@ import ProductsManager from '@/views/admin/ProductsManager.vue'
 Vue.use(Router)
 
 export default new Router({
-    mode: 'history',
+    mode: 'hash',
 
     scrollBehavior(to, from, savedPosition) {
         // Khi dùng nút Back/Forward

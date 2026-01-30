@@ -30,7 +30,7 @@
             </b-col>
 
             <!-- Collection -->
-            <b-col md="9">
+            <b-col md="9" ref="productSection">
                 <b-row v-if="filteredProducts.length">
                     <b-col v-for="(product, index) in filteredProducts" :key="product.id || index" cols="12" sm="12"
                         md="6" lg="4" xl="3" class="py-3">
@@ -146,7 +146,7 @@ export default {
 
     computed: {
         pages() {
-            const range = 2 // số trang trước & sau current
+            const range = 1 // số trang trước & sau current
             const start = Math.max(1, this.currentPage - range)
             const end = Math.min(this.totalPages, this.currentPage + range)
 
@@ -209,8 +209,23 @@ export default {
         },
         goPage(page) {
             if (page < 1 || page > this.totalPages) return
+
             this.currentPage = page
-            window.scrollTo({ top: 0, behavior: "smooth" })
+
+            this.$nextTick(() => {
+                const el = this.$refs.productSection
+                if (!el) return
+
+                const y =
+                    el.getBoundingClientRect().top +
+                    window.pageYOffset -
+                    20 // offset nhẹ cho đẹp
+
+                window.scrollTo({
+                    top: y,
+                    behavior: "smooth"
+                })
+            })
         },
 
         driveToThumbnail(url, size = 1000) {
@@ -649,6 +664,10 @@ export default {
         grid-auto-flow: row;
         row-gap: 4px;
     }
+
+    .card-btn.primary {
+        width: 100%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -663,5 +682,17 @@ export default {
     .category-list li:hover {
         transform: none;
     }
+
+    .card-btn.primary {
+        width: 80%;
+    }
+
+}
+
+@media (max-width: 992px) {
+    .card-btn.primary {
+        width: 70%;
+    }
+
 }
 </style>
