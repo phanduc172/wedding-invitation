@@ -2,7 +2,7 @@
     <div>
         <Header />
         <SecondHeader />
-        <b-container class="mt-4">
+        <b-container class="mt-4 p-0">
             <router-view />
         </b-container>
         <Footer />

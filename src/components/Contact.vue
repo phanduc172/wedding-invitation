@@ -56,7 +56,7 @@
                         <i class="bi bi-geo-alt"></i>
                         <strong class="me-1">Địa chỉ:</strong>
 
-                        <a href="https://maps.app.goo.gl/kQ1ggrbgD27HkaKg9" target="_blank" rel="noopener"
+                        <a href="https://maps.app.goo.gl/XuJQyLB3gyY8F5EG7" target="_blank" rel="noopener"
                             class="map-link">
                             36 Konh Hư, A Lưới 2, TP. Huế
                         </a>
@@ -288,10 +288,6 @@ export default {
         font-size: 14px;
     }
 
-    .contact-card {
-        padding: 1.4rem;
-    }
-
     .contact-btn {
         width: 100%;
         padding: 0.75rem 1rem;
@@ -333,6 +329,7 @@ export default {
 
     .contact-card {
         margin-bottom: 1.5rem;
+        padding: 0.5rem;
     }
 
     .map-box {
@@ -347,11 +344,28 @@ export default {
    ========================= */
 @media (max-width: 992px) {
     .contact-section {
-        padding: 3rem 2rem;
+        padding: 1rem;
     }
 
     .map-box {
         height: 240px;
+    }
+
+    .contact-section {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .contact-title {
+        font-size: 24px;
+    }
+
+    .contact-card {
+        margin-bottom: 1.5rem;
+        padding: 0.5rem;
+    }
+
+    .map-box {
+        height: 200px;
     }
 }
 

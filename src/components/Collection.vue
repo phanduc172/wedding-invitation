@@ -1,119 +1,124 @@
 <template>
     <section class="collection-section">
-        <div class="collection-header text-center">
-            <span class="section-badge">BỘ SƯU TẬP NỔI BẬT</span>
+        <b-container fluid="lg">
+            <div class="collection-header text-center">
+                <span class="section-badge">BỘ SƯU TẬP NỔI BẬT</span>
 
-            <h2 class="collection-title">
-                Danh mục <span>thiệp cưới</span>
-            </h2>
+                <h2 class="collection-title">
+                    Danh mục <span>thiệp cưới</span>
+                </h2>
 
-            <div class="title-divider">
-                <i class="bi bi-heart-fill"></i>
+                <div class="title-divider">
+                    <i class="bi bi-heart-fill"></i>
+                </div>
+
+                <p class="collection-desc">
+                    Chọn phong cách bạn yêu thích — khám phá những mẫu thiệp cưới tinh tế,
+                    được thiết kế dành riêng cho ngày trọng đại.
+                </p>
             </div>
 
-            <p class="collection-desc">
-                Chọn phong cách bạn yêu thích — khám phá những mẫu thiệp cưới tinh tế,
-                được thiết kế dành riêng cho ngày trọng đại.
-            </p>
-        </div>
 
+            <b-row>
+                <!-- Sidebar -->
+                <b-col md="3" class="category-sidebar">
+                    <ul class="category-list list-unstyled">
+                        <li v-for="(category, index) in categories" :key="category.id"
+                            :class="{ active: selectedCategory === category.id }" @click="selectCategory(category.id)">
+                            {{ index + 1 }}. {{ category.name }}
+                        </li>
+                    </ul>
+                </b-col>
 
-        <b-row>
-            <!-- Sidebar -->
-            <b-col md="3" class="category-sidebar">
-                <ul class="category-list list-unstyled">
-                    <li v-for="(category, index) in categories" :key="category.id"
-                        :class="{ active: selectedCategory === category.id }" @click="selectCategory(category.id)">
-                        {{ index + 1 }}. {{ category.name }}
-                    </li>
-                </ul>
-            </b-col>
-
-            <!-- Collection -->
-            <b-col md="9" ref="productSection">
-                <b-row v-if="filteredProducts.length">
-                    <b-col v-for="(product, index) in filteredProducts" :key="product.id || index" cols="12" sm="12"
-                        md="6" lg="4" xl="3" class="py-3">
-                        <b-card :img-src="driveToThumbnail(product.thumbnail, 1000)" img-top
-                            class="custom-card h-100 text-center">
-                            <!-- BADGE CODE -->
-                            <span class="card-badge" v-if="product.code">
-                                {{ product.code }}
-                            </span>
-
-                            <!-- TITLE -->
-                            <h6 class="card-title mt-3">
-                                {{ product.title }}
-                            </h6>
-
-                            <div class="price-box center">
-                                <span v-if="product.sale_price && product.sale_price < product.price" class="price-old">
-                                    {{ formatPrice(product.price) }}đ
+                <!-- Collection -->
+                <b-col md="9" ref="productSection">
+                    <b-row v-if="filteredProducts.length">
+                        <b-col v-for="(product, index) in filteredProducts" :key="product.id || index" cols="6" sm="6"
+                            md="6" lg="4" xl="3" class="py-1 py-sm-2">
+                            <b-card :img-src="driveToThumbnail(product.thumbnail, 1000)" img-top
+                                class="custom-card h-100 text-center">
+                                <!-- BADGE CODE -->
+                                <span class="card-badge" v-if="product.code">
+                                    {{ product.code }}
                                 </span>
 
-                                <span class="price-sale">
-                                    {{ formatPrice(product.sale_price || product.price) }}đ
-                                    <small>/ thiệp</small>
-                                </span>
-                            </div>
+                                <!-- TITLE -->
+                                <h6 class="card-title mt-3">
+                                    {{ product.title }}
+                                </h6>
 
-                            <!-- ACTION -->
-                            <div class="card-actions mt-3">
-                                <b-button class="card-btn primary"
-                                    @click="$router.push({ name: 'CardDetail', params: { id: product.id } })">
-                                    Xem chi tiết
-                                </b-button>
-                            </div>
-                        </b-card>
-                    </b-col>
-                </b-row>
-                <!-- Không có sản phẩm -->
-                <div v-else class="empty-state text-center">
-                    <i class="bi bi-box-seam empty-icon"></i>
-                    <h5>Không có sản phẩm</h5>
-                    <p>Danh mục này hiện chưa có mẫu thiệp nào.</p>
+                                <div class="price-box center">
+                                    <span v-if="product.sale_price && product.sale_price < product.price"
+                                        class="price-old">
+                                        {{ formatPrice(product.price) }}đ
+                                    </span>
 
-                </div>
-                <div class="text-center mt-4" v-if="limit">
-                    <b-button class="card-btn primary" :to="{ name: 'Collection' }">
-                        Xem tất cả thiệp cưới →
-                    </b-button>
-                </div>
+                                    <span class="price-sale">
+                                        {{ formatPrice(product.sale_price || product.price) }}đ
+                                        <small>/ thiệp</small>
+                                    </span>
+                                </div>
 
-                <!-- Pagination -->
-                <div class="pagination-wrapper" v-if="!limit && totalPages > 1">
-                    <!-- Prev -->
-                    <button class="page-btn" :disabled="currentPage === 1" @click="goPage(currentPage - 1)">
-                        ‹
-                    </button>
+                                <!-- ACTION -->
+                                <div class="card-actions mt-3">
+                                    <b-button class="card-btn primary"
+                                        @click="$router.push({ name: 'CardDetail', params: { id: product.id } })">
+                                        Xem chi tiết
+                                    </b-button>
+                                </div>
+                            </b-card>
+                        </b-col>
+                    </b-row>
+                    <!-- Không có sản phẩm -->
+                    <div v-else class="empty-state text-center">
+                        <i class="bi bi-box-seam empty-icon"></i>
+                        <h5>Không có sản phẩm</h5>
+                        <p>Danh mục này hiện chưa có mẫu thiệp nào.</p>
 
-                    <!-- First -->
-                    <button v-if="pages[0] !== 1" class="page-btn" @click="goPage(1)">
-                        1
-                    </button>
+                    </div>
+                    <div class="text-center mt-4" v-if="limit">
+                        <b-button class="card-btn primary" :to="{ name: 'Collection' }">
+                            Xem tất cả thiệp cưới →
+                        </b-button>
+                    </div>
 
-                    <span v-if="pages[0] > 2" class="page-ellipsis">…</span>
+                    <!-- Pagination -->
+                    <div class="pagination-wrapper" v-if="!limit && totalPages > 1">
+                        <!-- Prev -->
+                        <button class="page-btn" :disabled="currentPage === 1" @click="goPage(currentPage - 1)">
+                            ‹
+                        </button>
 
-                    <!-- Pages -->
-                    <button v-for="page in pages" :key="page" :class="['page-btn', { active: currentPage === page }]"
-                        @click="goPage(page)">
-                        {{ page }}
-                    </button>
+                        <!-- First -->
+                        <button v-if="pages[0] !== 1" class="page-btn" @click="goPage(1)">
+                            1
+                        </button>
 
-                    <span v-if="pages[pages.length - 1] < totalPages - 1" class="page-ellipsis">…</span>
+                        <span v-if="pages[0] > 2" class="page-ellipsis">…</span>
 
-                    <!-- Last -->
-                    <button v-if="pages[pages.length - 1] !== totalPages" class="page-btn" @click="goPage(totalPages)">
-                        {{ totalPages }}
-                    </button>
+                        <!-- Pages -->
+                        <button v-for="page in pages" :key="page"
+                            :class="['page-btn', { active: currentPage === page }]" @click="goPage(page)">
+                            {{ page }}
+                        </button>
 
-                    <!-- Next -->
-                    <button class="page-btn" :disabled="currentPage === totalPages" @click="goPage(currentPage + 1)">
-                        ›
-                    </button>
-                </div>
-            </b-col>
-        </b-row>
+                        <span v-if="pages[pages.length - 1] < totalPages - 1" class="page-ellipsis">…</span>
+
+                        <!-- Last -->
+                        <button v-if="pages[pages.length - 1] !== totalPages" class="page-btn"
+                            @click="goPage(totalPages)">
+                            {{ totalPages }}
+                        </button>
+
+                        <!-- Next -->
+                        <button class="page-btn" :disabled="currentPage === totalPages"
+                            @click="goPage(currentPage + 1)">
+                            ›
+                        </button>
+                    </div>
+                </b-col>
+            </b-row>
+        </b-container>
     </section>
 </template>
 
@@ -262,12 +267,9 @@ export default {
 
 /* CARD */
 .custom-card {
-    border: none;
-    border-radius: 28px;
+    width: 100%;
+    max-width: 100%;
     overflow: hidden;
-    box-shadow: 0 10px 28px rgba(139, 94, 60, 0.18);
-    transition: all 0.35s ease;
-    background: #fff;
 }
 
 .custom-card:hover {
@@ -277,8 +279,10 @@ export default {
 
 /* IMAGE */
 .custom-card img {
-    height: 220px;
+    width: 100%;
+    height: 200px;
     object-fit: cover;
+    display: block;
 }
 
 /* BADGE */
@@ -426,12 +430,6 @@ export default {
     line-height: 1.8;
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-    .collection-title {
-        font-size: 2rem;
-    }
-}
 
 /* Sidebar */
 .category-sidebar {
@@ -660,19 +658,83 @@ export default {
 
 /* Mobile */
 @media (max-width: 576px) {
+    .card-body {
+        padding: 0.5rem;
+    }
+
+    .card-title {
+        font-size: 18px;
+        margin: 0 !important;
+    }
+
+    .custom-card {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    /* Giá hiển thị gọn theo cột */
     .price-box {
+        display: grid;
         grid-auto-flow: row;
         row-gap: 4px;
+        margin: 0;
+        text-align: center;
+    }
+
+    /* Button không phá width cột */
+    .card-actions {
+        display: flex;
+        justify-content: center;
     }
 
     .card-btn.primary {
         width: 100%;
+        max-width: 100%;
+        padding: 6px 10px;
+        font-size: 13px;
+        box-sizing: border-box;
+    }
+
+    /* Card khóa chiều ngang – CHỐNG TRÀN */
+    .custom-card {
+        width: 100%;
+        max-width: 100%;
+        border: none;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 10px 26px rgba(139, 94, 60, 0.18);
+        transition: transform 0.3s ease;
+    }
+
+    /* Ảnh KHÔNG BAO GIỜ tràn */
+    .custom-card img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .collection-section {
+        padding: 1rem 0rem !important;
+    }
+
+    .price-sale {
+        font-size: 18px !important;
+        font-weight: 700;
+        color: #b76e79;
+        white-space: nowrap;
     }
 }
 
 @media (max-width: 768px) {
+    .collection-title {
+        font-size: 2rem;
+    }
+
     .collection-section {
-        padding: 3rem 1.5rem;
+        padding: 2rem 1rem;
+        margin-top: 1rem;
     }
 
     .category-sidebar {

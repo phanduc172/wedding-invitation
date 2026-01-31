@@ -7,7 +7,7 @@
                 tỉ mỉ từng chi tiết để bạn tự hào khi gửi thiệp.
             </p>
             <ul class="about-list list-unstyled">
-                <li>✨ Hơn 5 năm kinh nghiệm</li>
+                <li>✨ Có nhiều năm kinh nghiệm</li>
                 <li>🎨 Hỗ trợ chỉnh sửa miễn phí</li>
                 <li>🚚 Giao hàng an toàn, đóng gói cẩn thận</li>
             </ul>
