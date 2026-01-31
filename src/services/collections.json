@@ -1,19 +1,31 @@
 {
   "success": true,
   "sheet": "collections",
-  "total": 2,
+  "total": 4,
   "data": [
     {
       "id": 1,
-      "title": "Thiệp cưới phong cách Hàn Quốc",
-      "description": "Nhẹ nhàng – tinh tế",
-      "product_ids": 101.102
+      "title": "Thiệp gấp 3",
+      "description": "Thiệp cưới gấp 3, thiết kế tinh tế và sang trọng.",
+      "slug": "thiep-gap-3"
     },
     {
       "id": 2,
-      "title": "Thiệp cưới Luxury",
-      "description": "Sang trọng – cao cấp",
-      "product_ids": 105.11
+      "title": "Thiệp phong bì",
+      "description": "Thiệp cưới kèm phong bì đồng bộ, thiết kế tinh tế và trang nhã. ",
+      "slug": "thiep-phong-bi"
+    },
+    {
+      "id": 3,
+      "title": "Thiệp phôi",
+      "description": "Phôi thiệp trơn, chất liệu đẹp, sẵn sàng cho in ấn và thiết kế theo yêu cầu. Dễ tùy chỉnh nội dung, màu sắc và phong cách.",
+      "slug": "thiep-phoi"
+    },
+    {
+      "id": 4,
+      "title": "Thiệp gấp 4",
+      "description": "Thiệp cưới gấp 4 sang trọng, chia bố cục rõ ràng, giúp thể hiện đầy đủ thông tin lễ cưới một cách tinh tế và hài hòa.",
+      "slug": "thiep-gap-4"
     }
   ]
 }
