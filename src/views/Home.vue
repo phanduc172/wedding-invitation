@@ -45,11 +45,11 @@ export default {
                 },
                 {
                     property: 'og:image',
-                    content: 'https://ten-domain-cua-ban/seo/home.jpg'
+                    content: 'https://thiepcuoiminhduc.io.vn/seo-thumbnail.jpg'
                 },
                 {
                     property: 'og:url',
-                    content: 'https://ten-domain-cua-ban/'
+                    content: 'https://thiepcuoiminhduc.io.vn/'
                 },
 
                 // SEO Google
@@ -61,7 +61,7 @@ export default {
             link: [
                 {
                     rel: 'canonical',
-                    href: 'https://ten-domain-cua-ban/'
+                    href: 'https://thiepcuoiminhduc.io.vn/'
                 }
             ]
         }

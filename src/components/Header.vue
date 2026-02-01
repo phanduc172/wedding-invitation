@@ -24,11 +24,14 @@
 
             <!-- Bên phải: Liên hệ mạng xã hội -->
             <div class="social-icons mr-4 d-flex align-items-center">
-                <a href="https://fb.com/thiepcuoiminhduc17" target="_blank" class="social-btn facebook">
+                <a href="https://fb.com/thiepcuoiminhduc17" target="_blank" class="social-btn facebook ">
                     <i class="bi bi-facebook"></i>
                 </a>
-
-                <a href="#" target="_blank" class="social-btn instagram">
+                <!-- Zalo -->
+                <a href="https://zalo.me/0383181115" target="_blank" class="social-btn zalo" aria-label="Zalo">
+                    <img src="/images/zalo.png" alt="Zalo" />
+                </a>
+                <!-- <a href="#" target="_blank" class="social-btn instagram">
                     <i class="bi bi-instagram"></i>
                 </a>
 
@@ -38,7 +41,7 @@
 
                 <a href="#" target="_blank" class="social-btn pinterest">
                     <i class="bi bi-pinterest"></i>
-                </a>
+                </a> -->
             </div>
         </div>
     </header>
@@ -71,18 +74,6 @@ export default {
     color: #6b4226;
 }
 
-.hotline-label {
-    margin-right: 5px;
-    color: #b76e79;
-}
-
-.hotline-number {
-    color: #6b4226;
-    font-weight: 600;
-    font-size: 20px;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
 
 .hotline-number:hover {
     color: #b76e79;
@@ -106,6 +97,24 @@ export default {
 .social-icons a:hover {
     color: #b76e79;
     transform: scale(1.2);
+}
+
+.social-btn.zalo img {
+    width: 22px;
+    height: 22px;
+}
+
+/* Hover chung */
+.social-btn:hover {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 10px 24px rgba(183, 110, 121, 0.35);
+    transform: translateY(-3px) scale(1.05);
+    color: #fff;
+}
+
+/* Hover Zalo */
+.social-btn.zalo:hover {
+    box-shadow: 0 0 0 6px rgba(0, 104, 255, 0.15);
 }
 
 /* 🔹 Khi màn hình nhỏ (dưới 768px) chỉ hiển thị brand-name */
@@ -213,11 +222,6 @@ export default {
     text-decoration: none;
 }
 
-/* Hover chung */
-.social-btn:hover {
-    transform: translateY(-3px) scale(1.05);
-    color: #fff;
-}
 
 /* Màu riêng từng mạng (hover) */
 .social-btn.facebook:hover {
@@ -236,8 +240,7 @@ export default {
     background: linear-gradient(135deg, #bd081c, #8c0615);
 }
 
-
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .header-inner {
         flex-direction: column;
         gap: 10px;
@@ -250,7 +253,6 @@ export default {
     }
 
     .contact-info {
-        order: 2;
         width: 100%;
         display: flex;
         justify-content: center;
@@ -266,7 +268,14 @@ export default {
     .social-icons {
         display: none !important;
     }
+
+    .custom-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
 }
+
 
 @media (max-width: 991px) {
     .social-icons {
@@ -275,19 +284,6 @@ export default {
 
     .brand-name {
         font-size: 30px;
-    }
-}
-
-@media (max-width: 767px) {
-    .custom-header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        background: linear-gradient(to right, #fff, #fdf6f0);
-    }
-
-    .mobile-menu {
-        margin-top: 16px;
     }
 }
 </style>

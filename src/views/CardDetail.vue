@@ -41,7 +41,7 @@
                         </ul>
 
                         <div class="card-actions">
-                            <b-button class="detail-btn primary">
+                            <b-button class="detail-btn primary" @click="$bvModal.show('contact-modal')">
                                 💌 Chọn mẫu này
                             </b-button>
 
@@ -52,12 +52,16 @@
                     </b-col>
                 </b-row>
             </b-container>
+            <ContactModal :zalo="contact.zalo" :facebook="contact.facebook" :fanpage="contact.fanpage"
+                :cardTitle="card.title" />
         </section>
     </template>
 
 <script>
 import productsData from "@/services/products.json"
 import { formatPrice } from '../ultis/format'
+import ContactModal from '@/components/ContactModal.vue'
+
 
 export default {
     name: "CardDetail",
@@ -65,19 +69,19 @@ export default {
         if (!this.card) return {}
 
         return {
-            title: `${this.card.name} – Thiệp cưới cao cấp | Đức Phan`,
+            title: `${this.card.title} – Thiệp cưới cao cấp | Thiệp Cưới Minh Đức`,
             meta: [
                 {
                     name: 'description',
-                    content: this.card.description
+                    content: this.card.desc
                 },
                 {
                     property: 'og:title',
-                    content: this.card.name
+                    content: this.card.title
                 },
                 {
                     property: 'og:description',
-                    content: this.card.description
+                    content: this.card.desc
                 },
                 {
                     property: 'og:image',
@@ -85,21 +89,29 @@ export default {
                 },
                 {
                     property: 'og:url',
-                    content: `https://ten-domain-cua-ban/thiệp/${this.card.slug}`
+                    content: `https://thiepcuoiminhduc.io.vn/thiep-cuoi/${this.$route.params.id}`
                 }
             ],
             link: [
                 {
                     rel: 'canonical',
-                    href: `https://ten-domain-cua-ban/thiệp/${this.card.slug}`
+                    href: `https://thiepcuoiminhduc.io.vn/thiep-cuoi/${this.$route.params.id}`
                 }
             ]
         }
     },
 
+    components: {
+        ContactModal,
+    },
     data() {
         return {
-            card: null
+            card: null,
+            contact: {
+                zalo: 'https://zalo.me/0383181115',
+                facebook: 'https://www.facebook.com/phanduc172',
+                fanpage: 'https://www.facebook.com/thiepcuoiminhduc17'
+            }
         }
     },
     methods: {
@@ -117,7 +129,13 @@ export default {
             return `https://drive.google.com/thumbnail?id=${fileId}&sz=w${size}`
         }
     },
-
+    watch: {
+        card(val) {
+            if (val && val.title) {
+                document.title = `${val.title} – Thiệp Cưới Minh Đức`
+            }
+        }
+    },
     created() {
         const id = this.$route.params.id
 
