@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thiepcuoiminhduc.io.vn/sitemap.xml
