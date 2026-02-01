@@ -1,7 +1,7 @@
 {
   "success": true,
   "sheet": "categories",
-  "total": 11,
+  "total": 12,
   "data": [
     {
       "id": 1,
@@ -28,15 +28,23 @@
       "total_products": 1000
     },
     {
-      "id": 11,
+      "id": 4,
       "name": "THIỆP GẤP 4",
       "slug": "thiep-gap-4",
       "description": "Thiệp cưới gấp 4 sang trọng, bố cục khoa học giúp trình bày đầy đủ thông tin lễ cưới. Phù hợp nhiều phong cách, dễ thiết kế và tạo điểm nhấn tinh tế.",
       "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": ""
+      "total_products": 1000
     },
     {
-      "id": 4,
+      "id": 5,
+      "name": "THIỆP HD&TN",
+      "slug": "thiep-hd-tn",
+      "description": "Thiệp cưới gấp 3 độc đáo, chia bố cục rõ ràng cho thông tin lễ cưới. Tạo điểm nhấn khác biệt so với các mẫu thiệp truyền thống.",
+      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
+      "total_products": 1000
+    },
+    {
+      "id": 6,
       "name": "THIỆP CHỮ NHẬT",
       "slug": "thiep-chu-nhat",
       "description": "Thiệp cưới dáng ngang truyền thống, bố cục cân đối, dễ trình bày nội dung. Phù hợp nhiều phong cách từ cổ điển đến hiện đại.",
@@ -44,7 +52,7 @@
       "total_products": 1000
     },
     {
-      "id": 5,
+      "id": 7,
       "name": "THIỆP ĐỨNG",
       "slug": "thiep-dung",
       "description": "Thiệp cưới dạng đứng thanh lịch, tạo cảm giác trang trọng và tinh tế. Thích hợp cho các thiết kế tối giản hoặc sang trọng.",
@@ -52,7 +60,7 @@
       "total_products": 1000
     },
     {
-      "id": 6,
+      "id": 8,
       "name": "THIỆP STYLE HÀN QUỐC",
       "slug": "thiep-style-han-quoc",
       "description": "Thiệp cưới mang phong cách Hàn Quốc nhẹ nhàng, tinh tế, màu sắc nhã nhặn. Phù hợp với các cặp đôi yêu thích sự hiện đại và lãng mạn.",
@@ -60,7 +68,7 @@
       "total_products": 1000
     },
     {
-      "id": 7,
+      "id": 9,
       "name": "THIỆP LUXURY",
       "slug": "thiep-luxury",
       "description": "Dòng thiệp cưới cao cấp với thiết kế sang trọng, vật liệu và gia công tinh xảo. Phù hợp cho tiệc cưới trang trọng, đẳng cấp.",
@@ -68,7 +76,7 @@
       "total_products": 1000
     },
     {
-      "id": 8,
+      "id": 10,
       "name": "THIỆP NHỰA TRONG",
       "slug": "thiep-nhua-trong",
       "description": "Thiệp cưới làm từ chất liệu nhựa trong cao cấp, hiện đại và ấn tượng. Tạo cảm giác mới lạ, nổi bật ngay từ cái nhìn đầu tiên.",
@@ -76,7 +84,7 @@
       "total_products": 1000
     },
     {
-      "id": 9,
+      "id": 11,
       "name": "THIỆP POP UP",
       "slug": "thiep-popup",
       "description": "Thiệp cưới Pop Up với hiệu ứng bật mở 3D độc đáo. Mang đến trải nghiệm thú vị và khác biệt cho người nhận thiệp.",
@@ -84,7 +92,7 @@
       "total_products": 1000
     },
     {
-      "id": 10,
+      "id": 12,
       "name": "THIỆP CHÚC MỪNG",
       "slug": "thiep-chuc-mung",
       "description": "Thiệp chúc mừng dùng cho nhiều dịp như cưới hỏi, tân gia, khai trương, lễ Tết. Thiết kế đa dạng, phù hợp nhiều đối tượng.",

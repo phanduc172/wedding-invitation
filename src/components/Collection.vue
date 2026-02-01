@@ -1,5 +1,5 @@
 <template>
-    <section class="collection-section">
+    <section id="mau" class="collection-section">
         <b-container fluid="lg">
             <div class="collection-header text-center">
                 <span class="section-badge">BỘ SƯU TẬP NỔI BẬT</span>
@@ -727,28 +727,50 @@ export default {
     }
 }
 
+/* ===============================
+   CATEGORY SCROLL NGANG - MOBILE
+================================ */
 @media (max-width: 768px) {
-    .collection-title {
-        font-size: 2rem;
-    }
-
-    .collection-section {
-        padding: 2rem 1rem;
-        margin-top: 1rem;
-    }
 
     .category-sidebar {
-        margin-bottom: 2rem;
+        padding-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .category-list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        /* BẮT BUỘC */
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+
+        gap: 10px;
+        padding: 8px 6px;
+
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+
+    /* Ẩn thanh scrollbar */
+    .category-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    .category-list li {
+        flex-shrink: 0;
+        /* KHÔNG BỊ CO */
+        margin-bottom: 0;
+        padding: 10px 16px;
+        font-size: 13px;
+        border-radius: 999px;
+        white-space: nowrap;
     }
 
     .category-list li:hover {
         transform: none;
     }
-
-    .card-btn.primary {
-        width: 80%;
-    }
-
 }
 
 @media (max-width: 992px) {

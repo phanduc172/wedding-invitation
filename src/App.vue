@@ -7,6 +7,10 @@
 <script>
 export default {
   name: "App",
+  mounted() {
+    document.dispatchEvent(new Event('render-event'))
+  }
+
 };
 </script>
 

@@ -61,6 +61,41 @@ import { formatPrice } from '../ultis/format'
 
 export default {
     name: "CardDetail",
+    metaInfo() {
+        if (!this.card) return {}
+
+        return {
+            title: `${this.card.name} – Thiệp cưới cao cấp | Đức Phan`,
+            meta: [
+                {
+                    name: 'description',
+                    content: this.card.description
+                },
+                {
+                    property: 'og:title',
+                    content: this.card.name
+                },
+                {
+                    property: 'og:description',
+                    content: this.card.description
+                },
+                {
+                    property: 'og:image',
+                    content: this.card.image
+                },
+                {
+                    property: 'og:url',
+                    content: `https://ten-domain-cua-ban/thiệp/${this.card.slug}`
+                }
+            ],
+            link: [
+                {
+                    rel: 'canonical',
+                    href: `https://ten-domain-cua-ban/thiệp/${this.card.slug}`
+                }
+            ]
+        }
+    },
 
     data() {
         return {

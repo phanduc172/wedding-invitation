@@ -1,12 +1,12 @@
 {
   "success": true,
   "sheet": "collections",
-  "total": 4,
+  "total": 5,
   "data": [
     {
       "id": 1,
       "title": "Thiệp gấp 3",
-      "description": "Thiệp cưới gấp 3, thiết kế tinh tế và sang trọng.",
+      "description": "Thiệp cưới gấp 3, thiết kế tinh tế và sang trọng. ",
       "slug": "thiep-gap-3"
     },
     {
@@ -26,6 +26,12 @@
       "title": "Thiệp gấp 4",
       "description": "Thiệp cưới gấp 4 sang trọng, chia bố cục rõ ràng, giúp thể hiện đầy đủ thông tin lễ cưới một cách tinh tế và hài hòa.",
       "slug": "thiep-gap-4"
+    },
+    {
+      "id": 5,
+      "title": "Thiệp phôi HD&TN",
+      "description": "Phôi thiệp trơn, chất liệu đẹp, sẵn sàng cho in ấn và thiết kế theo yêu cầu. Dễ tùy chỉnh nội dung, màu sắc và phong cách.",
+      "slug": "thiep-phoi-hd-tn"
     }
   ]
 }
