@@ -38,10 +38,10 @@ export default new Router({
                 { path: '', name: 'Home', component: Home },
                 { path: 'about', name: 'About', component: About },
                 { path: 'services', name: 'Services', component: Services },
-                { path: 'collection', name: 'Collection', component: Collection },
+                { path: '/collection/:slug?', name: 'Collection', component: Collection },
                 { path: 'contact', name: 'Contact', component: Contact },
                 {
-                    path: 'collection/:id',
+                    path: '/collection/:slug/:id',
                     name: 'CardDetail',
                     component: () => import('@/views/CardDetail.vue'),
                     props: true

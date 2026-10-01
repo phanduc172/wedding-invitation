@@ -2,6 +2,7 @@
     <div>
         <Section />
         <Collection :limit="8" />
+        <!-- <Catalogue/> -->
         <Services />
         <About />
         <Contact />
@@ -14,6 +15,7 @@ import Collection from '../components/Collection.vue';
 import Contact from '../components/Contact.vue';
 import Section from '../components/Section.vue';
 import Services from '../components/Services.vue';
+// import Catalogue from './Catalogue.vue';
 
 
 export default {
@@ -71,7 +73,8 @@ export default {
         Collection,
         Services,
         About,
-        Contact
+        Contact,
+        // Catalogue
     },
 
 }

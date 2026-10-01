@@ -1,103 +1,87 @@
 {
   "success": true,
   "sheet": "categories",
-  "total": 12,
+  "total": 9,
   "data": [
     {
       "id": 1,
       "name": "THIỆP GẤP 3",
       "slug": "thiep-gap-3",
-      "description": "Thiệp cưới gấp 3 độc đáo, chia bố cục rõ ràng cho thông tin lễ cưới. Tạo điểm nhấn khác biệt so với các mẫu thiệp truyền thống.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "description": "Mẫu thiệp cưới thiết kế tinh tế, sang trọng.",
+      "thumbnail": "",
+      "total_products": 0
     },
     {
       "id": 2,
-      "name": "THIỆP PHONG BÌ",
-      "slug": "thiep-phong-bi",
-      "description": "Thiệp cưới kèm phong bì đồng bộ, thiết kế tinh tế và trang nhã. Giữ trọn sự lịch sự, sang trọng trong từng chi tiết, phù hợp với nhiều phong cách lễ cưới từ truyền thống đến hiện đại.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "name": "THIỆP ĐỎ",
+      "slug": "thiep-do",
+      "description": "Các mẫu thiệp cưới màu đỏ truyền thống, sang trọng và nổi bật.",
+      "thumbnail": "",
+      "total_products": 0
     },
     {
       "id": 3,
-      "name": "PHÔI THIỆP CƯỚI",
-      "slug": "thiep-phoi",
-      "description": "Phôi thiệp cưới trơn, phù hợp cho in ấn và thiết kế theo yêu cầu. Dễ tùy chỉnh phong cách, nội dung và màu sắc.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "name": "THIỆP BE - TRẮNG",
+      "slug": "thiep-be-trang",
+      "description": "Các mẫu thiệp cưới tông màu be và trắng, nhẹ nhàng, tinh tế và hiện đại.",
+      "thumbnail": "",
+      "total_products": 0
     },
     {
       "id": 4,
-      "name": "THIỆP GẤP 4",
-      "slug": "thiep-gap-4",
-      "description": "Thiệp cưới gấp 4 sang trọng, bố cục khoa học giúp trình bày đầy đủ thông tin lễ cưới. Phù hợp nhiều phong cách, dễ thiết kế và tạo điểm nhấn tinh tế.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "name": "THIỆP CHIBI",
+      "slug": "thiep-chibi",
+      "description": "Các mẫu thiệp cưới phong cách Chibi đáng yêu, trẻ trung và độc đáo.",
+      "thumbnail": "",
+      "total_products": 0
     },
     {
       "id": 5,
-      "name": "THIỆP HD&TN",
-      "slug": "thiep-hd-tn",
-      "description": "Thiệp cưới gấp 3 độc đáo, chia bố cục rõ ràng cho thông tin lễ cưới. Tạo điểm nhấn khác biệt so với các mẫu thiệp truyền thống.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "name": "THIỆP HOA SEN",
+      "slug": "thiep-hoa-sen",
+      "description": "Các mẫu thiệp cưới lấy hoa sen làm điểm nhấn, mang nét thanh lịch và truyền thống.",
+      "thumbnail": "",
+      "total_products": 0
     },
     {
       "id": 6,
-      "name": "THIỆP CHỮ NHẬT",
-      "slug": "thiep-chu-nhat",
-      "description": "Thiệp cưới dáng ngang truyền thống, bố cục cân đối, dễ trình bày nội dung. Phù hợp nhiều phong cách từ cổ điển đến hiện đại.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "name": "THIỆP HỒNG",
+      "slug": "thiep-hong",
+      "description": "Các mẫu thiệp cưới màu hồng với phong cách ngọt ngào, lãng mạn và trẻ trung.",
+      "thumbnail": "",
+      "total_products": 0
     },
     {
       "id": 7,
-      "name": "THIỆP ĐỨNG",
-      "slug": "thiep-dung",
-      "description": "Thiệp cưới dạng đứng thanh lịch, tạo cảm giác trang trọng và tinh tế. Thích hợp cho các thiết kế tối giản hoặc sang trọng.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "name": "THIỆP XANH DƯƠNG",
+      "slug": "thiep-xanh-duong",
+      "description": "Các mẫu thiệp cưới tông xanh dương, mang phong cách hiện đại, thanh lịch và sang trọng.",
+      "thumbnail": "",
+      "total_products": 0
     },
     {
       "id": 8,
-      "name": "THIỆP STYLE HÀN QUỐC",
-      "slug": "thiep-style-han-quoc",
-      "description": "Thiệp cưới mang phong cách Hàn Quốc nhẹ nhàng, tinh tế, màu sắc nhã nhặn. Phù hợp với các cặp đôi yêu thích sự hiện đại và lãng mạn.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "name": "THIỆP XANH LÁ",
+      "slug": "thiep-xanh-la",
+      "description": "Các mẫu thiệp cưới tông xanh lá, mang cảm giác tự nhiên, tươi mới và tinh tế.",
+      "thumbnail": "",
+      "total_products": 0
     },
     {
       "id": 9,
-      "name": "THIỆP LUXURY",
-      "slug": "thiep-luxury",
-      "description": "Dòng thiệp cưới cao cấp với thiết kế sang trọng, vật liệu và gia công tinh xảo. Phù hợp cho tiệc cưới trang trọng, đẳng cấp.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "name": "PHÔI BÌ OFFSET - ST",
+      "slug": "phoi-bi-offset-st",
+      "description": "Các mẫu phôi bì offset ST dùng để in ấn và hoàn thiện thiệp cưới.",
+      "thumbnail": "",
+      "total_products": 0
     },
     {
       "id": 10,
-      "name": "THIỆP NHỰA TRONG",
-      "slug": "thiep-nhua-trong",
-      "description": "Thiệp cưới làm từ chất liệu nhựa trong cao cấp, hiện đại và ấn tượng. Tạo cảm giác mới lạ, nổi bật ngay từ cái nhìn đầu tiên.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
-    },
-    {
-      "id": 11,
-      "name": "THIỆP POP UP",
-      "slug": "thiep-popup",
-      "description": "Thiệp cưới Pop Up với hiệu ứng bật mở 3D độc đáo. Mang đến trải nghiệm thú vị và khác biệt cho người nhận thiệp.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
-    },
-    {
-      "id": 12,
-      "name": "THIỆP CHÚC MỪNG",
-      "slug": "thiep-chuc-mung",
-      "description": "Thiệp chúc mừng dùng cho nhiều dịp như cưới hỏi, tân gia, khai trương, lễ Tết. Thiết kế đa dạng, phù hợp nhiều đối tượng.",
-      "thumbnail": "https://drive.google.com/file/d/1POAXG-eEezSQafFzTrP6nRMo6P68G8z_/view?usp=sharing",
-      "total_products": 1000
+      "name": "PHÔI OFFSET GẤP 3",
+      "slug": "phoi-offset-gap-3",
+      "description": "Các mẫu phôi offset gấp 3, phù hợp thiết kế thiệp cưới với bố cục nhiều phần.",
+      "thumbnail": "",
+      "total_products": 0
     }
   ]
 }

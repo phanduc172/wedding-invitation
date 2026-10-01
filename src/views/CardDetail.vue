@@ -5,7 +5,42 @@
                     <!-- Image -->
                     <b-col md="6" class="mb-4">
                         <div class="card-image-wrapper">
-                            <b-img :src="driveToThumbnail(card.image, 1200)" fluid alt="Thiệp cưới" />
+                            <div class="detail-image-container">
+
+                                <!-- Loading -->
+                                <div v-if="imageLoading" class="detail-image-loading">
+                                    <span class="image-spinner"></span>
+                                    <span>Đang tải ảnh...</span>
+                                </div>
+
+                                <!-- Ảnh -->
+                                <img v-if="imageSrc" :src="imageSrc" :key="imageSrc" alt="Thiệp cưới"
+                                    class="detail-product-image" @load="imageLoaded" @error="imageError" />
+
+                                <!-- Đang thử tải lại -->
+                                <div v-if="imageRetrying" class="detail-image-retrying">
+                                    <span class="image-spinner"></span>
+                                    <span>
+                                        Đang kết nối lại ảnh...
+                                        <small>
+                                            Lần {{ imageRetry }}/{{ maxImageRetry }}
+                                        </small>
+                                    </span>
+                                </div>
+
+                                <!-- Không thể tải -->
+                                <div v-if="imageFailed" class="detail-image-error">
+                                    <i class="bi bi-image"></i>
+
+                                    <span>Không thể hiển thị ảnh</span>
+
+                                    <button type="button" class="retry-image-btn" @click="manualRetryImage">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                        Thử lại
+                                    </button>
+                                </div>
+
+                            </div>
                         </div>
                     </b-col>
                     <!-- Content -->
@@ -107,26 +142,225 @@ export default {
     data() {
         return {
             card: null,
+
             contact: {
                 zalo: 'https://zalo.me/0383181115',
                 facebook: 'https://www.facebook.com/phanduc172',
                 fanpage: 'https://www.facebook.com/thiepcuoiminhduc17'
-            }
+            },
+
+            // ==========================
+            // IMAGE LOADING
+            // ==========================
+            // ==========================
+            // IMAGE LOADING
+            // ==========================
+            imageSrc: '',
+            imageLoading: true,
+            imageRetrying: false,
+            imageFailed: false,
+
+            imageRetry: 0,
+            maxImageRetry: 5,
+
+            imageRetryTimer: null,
+
+            // Các URL sẽ lần lượt được thử
+            imageUrls: [],
+            imageUrlIndex: 0
         }
     },
     methods: {
         formatPrice,
+
         driveToThumbnail(url, size = 1200) {
             if (!url) return ''
 
             const match =
                 url.match(/\/d\/([^/]+)/) ||
-                url.match(/id=([^&]+)/)
+                url.match(/[?&]id=([^&]+)/)
 
             if (!match) return url
 
             const fileId = match[1]
+
             return `https://drive.google.com/thumbnail?id=${fileId}&sz=w${size}`
+        },
+
+        // ========================================
+        // LẤY FILE ID GOOGLE DRIVE
+        // ========================================
+        getDriveFileId(url) {
+            if (!url) return ''
+
+            const match =
+                url.match(/\/d\/([^/]+)/) ||
+                url.match(/[?&]id=([^&]+)/)
+
+            return match ? match[1] : ''
+        },
+
+        // ========================================
+        // TẠO DANH SÁCH URL FALLBACK
+        // ========================================
+        createImageUrls(url) {
+            if (!url) return []
+
+            const fileId = this.getDriveFileId(url)
+
+            if (!fileId) {
+                return [url]
+            }
+
+            return [
+                // Ảnh chính
+                `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`,
+
+                // Thử kích thước khác
+                `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
+
+                `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`,
+
+                // Fallback Google Drive
+                `https://drive.google.com/uc?export=view&id=${fileId}`
+            ]
+        },
+
+        // ========================================
+        // KHỞI TẠO ẢNH
+        // ========================================
+        initImage(url) {
+
+            clearTimeout(this.imageRetryTimer)
+
+            this.imageRetry = 0
+            this.imageUrlIndex = 0
+
+            this.imageLoading = true
+            this.imageRetrying = false
+            this.imageFailed = false
+
+            this.imageUrls = this.createImageUrls(url)
+
+            if (!this.imageUrls.length) {
+                this.imageLoading = false
+                this.imageFailed = true
+                return
+            }
+
+            this.imageSrc = this.imageUrls[0]
+        },
+
+        // ========================================
+        // LOAD THÀNH CÔNG
+        // ========================================
+        imageLoaded() {
+
+            clearTimeout(this.imageRetryTimer)
+
+            this.imageLoading = false
+            this.imageRetrying = false
+            this.imageFailed = false
+
+            this.imageRetry = 0
+
+            console.log('✅ Ảnh tải thành công:', this.imageSrc)
+        },
+
+        // ========================================
+        // LOAD LỖI
+        // ========================================
+        imageError() {
+
+            console.warn(
+                '❌ Không tải được ảnh:',
+                this.imageSrc
+            )
+
+            this.imageLoading = false
+            this.imageRetrying = true
+            this.imageFailed = false
+
+            // Nếu còn URL fallback
+            if (this.imageUrlIndex < this.imageUrls.length - 1) {
+
+                this.imageUrlIndex++
+
+                const nextUrl =
+                    this.imageUrls[this.imageUrlIndex]
+
+                // Cho browser một khoảng thời gian
+                // trước khi đổi URL
+                clearTimeout(this.imageRetryTimer)
+
+                this.imageRetryTimer = setTimeout(() => {
+
+                    this.imageRetry++
+
+                    this.imageSrc =
+                        `${nextUrl}${nextUrl.includes('?') ? '&' : '?'}retry=${Date.now()}`
+
+                }, 800)
+
+                return
+            }
+
+            // ========================================
+            // Đã thử hết URL → retry lại từ đầu
+            // ========================================
+            if (this.imageRetry < this.maxImageRetry) {
+
+                this.imageRetry++
+
+                const delay =
+                    Math.min(
+                        1000 * Math.pow(2, this.imageRetry - 1),
+                        8000
+                    )
+
+                console.log(
+                    `🔄 Retry ảnh lần ${this.imageRetry} sau ${delay}ms`
+                )
+
+                clearTimeout(this.imageRetryTimer)
+
+                this.imageRetryTimer = setTimeout(() => {
+
+                    this.imageUrlIndex = 0
+
+                    const retryUrl =
+                        this.imageUrls[0]
+
+                    this.imageSrc =
+                        `${retryUrl}&retry=${Date.now()}`
+
+                }, delay)
+
+                return
+            }
+
+            // ========================================
+            // THỰC SỰ THẤT BẠI
+            // ========================================
+            this.imageRetrying = false
+            this.imageFailed = true
+            this.imageLoading = false
+
+            console.error(
+                '❌ Không thể tải ảnh sau nhiều lần thử'
+            )
+        },
+
+        // ========================================
+        // NGƯỜI DÙNG BẤM THỬ LẠI
+        // ========================================
+        manualRetryImage() {
+
+            if (!this.card || !this.card.image) {
+                return
+            }
+
+            this.initImage(this.card.image)
         }
     },
     watch: {
@@ -137,6 +371,7 @@ export default {
         }
     },
     created() {
+
         const id = this.$route.params.id
 
         const product = productsData.data.find(
@@ -151,13 +386,24 @@ export default {
         this.card = {
             title: product.title,
             image: product.thumbnail,
-            desc: product.description || "Mẫu thiệp cưới thiết kế tinh tế, sang trọng.",
-            style: product.style || "Thanh lịch – Hiện đại",
-            size: product.size || "12 x 18 cm",
+            desc: product.description ||
+                "Mẫu thiệp cưới thiết kế tinh tế, sang trọng.",
+            style: product.style ||
+                "Thanh lịch – Hiện đại",
+            size: product.size ||
+                "12 x 18 cm",
             price: product.price,
             sale_price: product.sale_price
         }
-    }
+
+        this.initImage(product.thumbnail)
+    },
+
+    beforeDestroy() {
+        clearTimeout(this.imageRetryTimer)
+    },
+
+
 }
 </script>
 
@@ -340,6 +586,273 @@ export default {
     color: #8B5E3C;
 }
 
+/* ========================================
+   DETAIL IMAGE LOADING
+======================================== */
+
+.detail-image-container {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    overflow: hidden;
+    border-radius: 24px;
+    background: #f8f3ef;
+}
+
+.detail-product-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Loading */
+/* ========================================
+   DETAIL IMAGE
+======================================== */
+
+.card-image-wrapper {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 14px 36px rgba(139, 94, 60, 0.3);
+}
+
+.detail-image-container {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+
+    overflow: hidden;
+
+    border-radius: 24px;
+
+    background: #f8f3ef;
+}
+
+/* ========================================
+   IMAGE
+======================================== */
+
+.detail-product-image {
+    position: relative;
+    z-index: 1;
+
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    min-height: 200px;
+
+    object-fit: cover;
+
+    transition: opacity 0.3s ease,
+        transform 0.5s ease;
+}
+
+.card-image-wrapper:hover .detail-product-image {
+    transform: scale(1.03);
+}
+
+/* ========================================
+   LOADING
+======================================== */
+
+/* ========================================
+   RETRYING
+======================================== */
+
+.detail-image-retrying {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    background: rgba(248, 243, 239, 0.94);
+
+    color: #8B5E3C;
+
+    font-size: 14px;
+
+    text-align: center;
+}
+
+.detail-image-retrying small {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    opacity: 0.7;
+}
+
+/* ========================================
+   SPINNER
+======================================== */
+
+.image-spinner {
+    width: 36px;
+    height: 36px;
+
+    border: 3px solid rgba(183, 110, 121, 0.2);
+
+    border-top-color: #b76e79;
+
+    border-radius: 50%;
+
+    animation: detailImageSpin 0.8s linear infinite;
+}
+
+@keyframes detailImageSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================
+   ERROR
+======================================== */
+
+.detail-image-error {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 30;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    background: #f8f3ef;
+
+    color: #8B5E3C;
+
+    font-size: 14px;
+
+    text-align: center;
+}
+
+.detail-image-error>i {
+    font-size: 40px;
+
+    color: #b76e79;
+}
+
+/* ========================================
+   RETRY BUTTON
+======================================== */
+
+.retry-image-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    border: 0;
+
+    border-radius: 20px;
+
+    padding: 7px 16px;
+
+    background: linear-gradient(135deg,
+            #b76e79,
+            #8B5E3C);
+
+    color: #fff;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.retry-image-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 15px rgba(183, 110, 121, 0.3);
+}
+
+.detail-image-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    background: #f8f3ef;
+    color: #8B5E3C;
+
+    font-size: 14px;
+}
+
+/* Spinner */
+
+.image-spinner {
+    width: 36px;
+    height: 36px;
+
+    border: 3px solid rgba(183, 110, 121, 0.2);
+    border-top-color: #b76e79;
+
+    border-radius: 50%;
+
+    animation: detailImageSpin 0.8s linear infinite;
+}
+
+@keyframes detailImageSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error */
+
+.detail-image-error {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    background: #f8f3ef;
+    color: #8B5E3C;
+
+    font-size: 14px;
+}
+
+.detail-image-error i {
+    font-size: 34px;
+    color: #b76e79;
+}
 
 /* Mobile */
 @media (max-width: 576px) {

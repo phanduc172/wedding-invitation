@@ -17,14 +17,36 @@
                     được thiết kế dành riêng cho ngày trọng đại.
                 </p>
             </div>
+            <!-- SEARCH -->
+            <div class="collection-search">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
 
+                    <input v-model.trim="searchKeyword" type="text" placeholder="Tìm kiếm mẫu thiệp, mã thiệp..."
+                        aria-label="Tìm kiếm thiệp" />
+
+                    <button v-if="searchKeyword" type="button" class="search-clear" @click="clearSearch"
+                        aria-label="Xóa tìm kiếm">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+
+                <div class="search-result" v-if="searchKeyword">
+                    Tìm thấy
+                    <strong>{{ searchResultCount }}</strong>
+                    mẫu thiệp
+                    <span v-if="selectedCategory !== null">
+                        trong danh mục đã chọn
+                    </span>
+                </div>
+            </div>
 
             <b-row>
                 <!-- Sidebar -->
                 <b-col md="3" class="category-sidebar">
                     <ul class="category-list list-unstyled">
                         <li v-for="(category, index) in categories" :key="category.id"
-                            :class="{ active: selectedCategory === category.id }" @click="selectCategory(category.id)">
+                            :class="{ active: selectedCategory === category.id }" @click="selectCategory(category)">
                             {{ index + 1 }}. {{ category.name }}
                         </li>
                     </ul>
@@ -35,8 +57,28 @@
                     <b-row v-if="filteredProducts.length">
                         <b-col v-for="(product, index) in filteredProducts" :key="product.id || index" cols="6" sm="6"
                             md="6" lg="4" xl="3" class="py-1 py-sm-2">
-                            <b-card :img-src="driveToThumbnail(product.thumbnail, 1000)" img-top
-                                class="custom-card h-100 text-center">
+                            <b-card class="custom-card h-100 text-center">
+
+                                <!-- IMAGE -->
+                                <div class="card-image-wrapper">
+
+                                    <!-- Loading -->
+                                    <div v-if="imageLoading(product)" class="image-loading">
+                                        <span class="image-spinner"></span>
+                                    </div>
+
+                                    <!-- Ảnh -->
+                                    <img :src="getImageSrc(product)" :alt="product.title" class="product-image"
+                                        loading="lazy" @load="imageLoaded(product)" @error="imageError(product)">
+
+                                    <!-- Nếu tải lỗi sau nhiều lần -->
+                                    <div v-if="imageFailed(product)" class="image-error">
+                                        <i class="bi bi-image"></i>
+                                        <span>Đang tải lại ảnh...</span>
+                                    </div>
+
+                                </div>
+
                                 <!-- BADGE CODE -->
                                 <span class="card-badge" v-if="product.code">
                                     {{ product.code }}
@@ -61,11 +103,17 @@
 
                                 <!-- ACTION -->
                                 <div class="card-actions mt-3">
-                                    <b-button class="card-btn primary"
-                                        @click="$router.push({ name: 'CardDetail', params: { id: product.id } })">
+                                    <b-button class="card-btn primary" @click="$router.push({
+                                        name: 'CardDetail',
+                                        params: {
+                                            slug: product.slug,
+                                            id: product.id
+                                        }
+                                    })">
                                         Xem chi tiết
                                     </b-button>
                                 </div>
+
                             </b-card>
                         </b-col>
                     </b-row>
@@ -138,7 +186,16 @@ export default {
             categories: [],
             selectedCategory: null,
             currentPage: 1,
-            perPage: 12
+            perPage: 12,
+
+            // ==========================
+            // QUẢN LÝ ẢNH
+            // ==========================
+            imageStates: {},
+
+            // Số lần tối đa thử tải lại
+            maxImageRetry: 4,
+            searchKeyword: '',
         }
     },
 
@@ -164,32 +221,115 @@ export default {
         filteredProducts() {
             let list = this.products
 
+            // =========================
+            // LỌC THEO DANH MỤC
+            // =========================
             if (this.selectedCategory !== null) {
                 list = list.filter(
                     p => Number(p.category_id) === Number(this.selectedCategory)
                 )
             }
 
-            // 👉 TRANG HOME: chỉ lấy limit sản phẩm
+            // =========================
+            // TÌM KIẾM
+            // =========================
+            const keyword = this.normalizeText(this.searchKeyword)
+
+            if (keyword) {
+                list = list.filter(product => {
+
+                    const searchableText = this.normalizeText([
+                        product.title,
+                        product.code,
+                        product.description,
+                        product.category_name,
+                        ...(Array.isArray(product.tags) ? product.tags.join(' ') : [])
+                    ].filter(Boolean).join(' '))
+
+                    return searchableText.includes(keyword)
+                })
+            }
+
+            // =========================
+            // HOME: GIỚI HẠN SỐ LƯỢNG
+            // =========================
             if (this.limit) {
                 return list.slice(0, this.limit)
             }
 
-            // 👉 TRANG /collection: phân trang bình thường
+            // =========================
+            // COLLECTION: PHÂN TRANG
+            // =========================
             const start = (this.currentPage - 1) * this.perPage
+
             return list.slice(start, start + this.perPage)
+        },
+        searchResultCount() {
+            let list = this.products
+
+            // Lọc category
+            if (this.selectedCategory !== null) {
+                list = list.filter(
+                    p => Number(p.category_id) === Number(this.selectedCategory)
+                )
+            }
+
+            // Lọc keyword
+            const keyword = this.normalizeText(this.searchKeyword)
+
+            if (!keyword) {
+                return list.length
+            }
+
+            return list.filter(product => {
+
+                const searchableText = this.normalizeText([
+                    product.title,
+                    product.code,
+                    product.description,
+                    product.category_name,
+                    ...(Array.isArray(product.tags)
+                        ? product.tags.join(' ')
+                        : [])
+                ].filter(Boolean).join(' '))
+
+                return searchableText.includes(keyword)
+            }).length
         },
 
         totalPages() {
             if (this.limit) return 1
 
-            const total = this.selectedCategory !== null
-                ? this.products.filter(
-                    p => Number(p.category_id) === Number(this.selectedCategory)
-                ).length
-                : this.products.length
+            let list = this.products
 
-            return Math.ceil(total / this.perPage)
+            // Category
+            if (this.selectedCategory !== null) {
+                list = list.filter(
+                    p => Number(p.category_id) === Number(this.selectedCategory)
+                )
+            }
+
+            // Search
+            const keyword = this.normalizeText(this.searchKeyword)
+
+            if (keyword) {
+                list = list.filter(product => {
+
+                    const searchableText = this.normalizeText([
+                        product.title,
+                        product.code,
+                        product.description,
+                        product.category_name,
+                        ...(Array.isArray(product.tags)
+                            ? product.tags.join(' ')
+                            : [])
+                    ].filter(Boolean).join(' '))
+
+                    return searchableText.includes(keyword)
+                })
+            }
+
+            return Math.ceil(list.length / this.perPage)
         },
 
         productsWithImages() {
@@ -201,15 +341,69 @@ export default {
     },
 
     watch: {
+        // Khi thay đổi danh mục
         selectedCategory() {
             this.currentPage = 1
+
+            this.$nextTick(() => {
+                this.checkVisibleImages()
+            })
+        },
+
+        // Khi đổi trang
+        currentPage() {
+            this.$nextTick(() => {
+                this.checkVisibleImages()
+            })
+        },
+
+        // Khi tìm kiếm
+        searchKeyword() {
+            this.currentPage = 1
+
+            this.$nextTick(() => {
+                this.checkVisibleImages()
+            })
+        },
+
+        // ==============================
+        // KHI CHUYỂN ROUTER → XÓA SEARCH
+        // ==============================
+        $route(to, from) {
+            if (to.name !== from.name) {
+                this.searchKeyword = ''
+                this.currentPage = 1
+            }
         }
     },
 
     methods: {
         formatPrice,
-        selectCategory(id) {
-            this.selectedCategory = id
+        selectCategory(category) {
+            this.selectedCategory = category.id
+            this.searchKeyword = ''
+            this.currentPage = 1
+
+            this.$router.push({
+                name: this.$route.name,
+                params: {
+                    slug: category.slug
+                }
+            })
+        },
+        normalizeText(text) {
+            if (!text) return ''
+
+            return String(text)
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/g, 'd')
+                .replace(/Đ/g, 'D')
+                .toLowerCase()
+                .trim()
+        },
+        clearSearch() {
+            this.searchKeyword = ''
             this.currentPage = 1
         },
         goPage(page) {
@@ -245,10 +439,191 @@ export default {
 
             const fileId = match[1]
             return `https://drive.google.com/thumbnail?id=${fileId}&sz=w${size}`
-        }
+        },
+        // ========================================
+        // LẤY URL ẢNH
+        // ========================================
+        getImageSrc(product) {
+            if (!product || !product.thumbnail) {
+                return ''
+            }
+
+            const id = product.id
+
+            // Nếu ảnh đã có trạng thái
+            if (this.imageStates[id] && this.imageStates[id].src) {
+                return this.imageStates[id].src
+            }
+
+            return this.driveToThumbnail(product.thumbnail, 1000)
+        },
+
+        // ========================================
+        // ẢNH ĐANG LOAD
+        // ========================================
+        imageLoading(product) {
+            if (!product) return false
+
+            const state = this.imageStates[product.id]
+
+            return state ? state.loading : true
+        },
+
+        // ========================================
+        // ẢNH LOAD THÀNH CÔNG
+        // ========================================
+        imageLoaded(product) {
+            if (!product) return
+
+            const id = product.id
+
+            if (!this.imageStates[id]) {
+                this.$set(this.imageStates, id, {})
+            }
+
+            this.$set(this.imageStates[id], 'loading', false)
+            this.$set(this.imageStates[id], 'failed', false)
+            this.$set(this.imageStates[id], 'loaded', true)
+        },
+
+        // ========================================
+        // KIỂM TRA ẢNH ĐÃ LỖI
+        // ========================================
+        imageFailed(product) {
+            if (!product) return false
+
+            const state = this.imageStates[product.id]
+
+            return state ? state.failed : false
+        },
+
+        // ========================================
+        // ẢNH BỊ LỖI → TỰ ĐỘNG RETRY
+        // ========================================
+        imageError(product) {
+            if (!product || !product.thumbnail) return
+
+            const id = product.id
+
+            if (!this.imageStates[id]) {
+                this.$set(this.imageStates, id, {
+                    retry: 0,
+                    loading: true,
+                    failed: false,
+                    loaded: false,
+                    src: this.driveToThumbnail(product.thumbnail, 1000)
+                })
+            }
+
+            const state = this.imageStates[id]
+
+            // Đã quá số lần retry
+            if (state.retry >= this.maxImageRetry) {
+                this.$set(state, 'loading', false)
+                this.$set(state, 'failed', true)
+                return
+            }
+
+            const nextRetry = state.retry + 1
+
+            this.$set(state, 'retry', nextRetry)
+            this.$set(state, 'loading', true)
+
+            // Retry theo cấp độ:
+            // lần 1: 1 giây
+            // lần 2: 2 giây
+            // lần 3: 4 giây
+            // lần 4: 8 giây
+            const delay = Math.pow(2, nextRetry - 1) * 1000
+
+            setTimeout(() => {
+
+                const baseUrl = this.driveToThumbnail(
+                    product.thumbnail,
+                    1000
+                )
+
+                // Cache busting
+                const separator = baseUrl.includes('?') ? '&' : '?'
+
+                const newUrl =
+                    `${baseUrl}${separator}retry=${Date.now()}`
+
+                this.$set(state, 'src', newUrl)
+
+            }, delay)
+        },
+        checkVisibleImages() {
+            this.$nextTick(() => {
+
+                const images =
+                    this.$el.querySelectorAll('.product-image')
+
+                images.forEach(img => {
+
+                    // Ảnh đã load
+                    if (img.complete && img.naturalWidth > 0) {
+                        return
+                    }
+
+                    // Ảnh chưa load → browser sẽ tiếp tục xử lý
+                    if (!img.complete) {
+                        return
+                    }
+
+                    // Nếu browser báo lỗi
+                    const productId = img.dataset?.productId
+
+                    if (productId) {
+                        const product = this.products.find(
+                            p => String(p.id) === String(productId)
+                        )
+
+                        if (product) {
+                            this.imageError(product)
+                        }
+                    }
+                })
+
+            })
+        },
+
+        preloadCurrentImages() {
+
+            this.filteredProducts.forEach(product => {
+
+                if (!product.thumbnail) return
+
+                const id = product.id
+
+                if (!this.imageStates[id]) {
+                    this.$set(this.imageStates, id, {
+                        retry: 0,
+                        loading: true,
+                        failed: false,
+                        loaded: false,
+                        src: this.driveToThumbnail(
+                            product.thumbnail,
+                            1000
+                        )
+                    })
+                }
+
+                const img = new Image()
+
+                img.onload = () => {
+                    this.imageLoaded(product)
+                }
+
+                img.onerror = () => {
+                    this.imageError(product)
+                }
+
+                img.src = this.imageStates[id].src
+            })
+        },
 
     },
-
 
     created() {
         this.products = productsData.data
@@ -256,7 +631,13 @@ export default {
 
         // chọn category đầu tiên
         this.selectedCategory = this.categories[0]?.id ?? null
-    }
+    },
+
+    mounted() {
+        this.$nextTick(() => {
+            this.preloadCurrentImages()
+        })
+    },
 
 }
 </script>
@@ -656,6 +1037,77 @@ export default {
     color: #6b4226;
 }
 
+.card-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #f8f3ef;
+}
+
+/* Ảnh */
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.3s ease;
+}
+
+/* Loading */
+.image-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f8f3ef;
+}
+
+/* Spinner */
+.image-spinner {
+    width: 28px;
+    height: 28px;
+
+    border: 3px solid rgba(183, 110, 121, 0.2);
+    border-top-color: #b76e79;
+
+    border-radius: 50%;
+
+    animation: imageSpin 0.8s linear infinite;
+}
+
+@keyframes imageSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Khi ảnh lỗi */
+.image-error {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background: #f8f3ef;
+    color: #8B5E3C;
+
+    font-size: 13px;
+}
+
+.image-error i {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
 /* Mobile */
 @media (max-width: 576px) {
     .card-body {
@@ -725,6 +1177,14 @@ export default {
         color: #b76e79;
         white-space: nowrap;
     }
+
+    .card-image-wrapper {
+        height: 100px;
+    }
+
+    .product-image {
+        height: 100px;
+    }
 }
 
 /* ===============================
@@ -778,5 +1238,139 @@ export default {
         width: 70%;
     }
 
+}
+
+/* ========================================
+   SEARCH
+======================================== */
+
+.collection-search {
+    max-width: 650px;
+    margin: 0 auto 2rem;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    background: #fff;
+    border: 1px solid rgba(183, 110, 121, 0.25);
+
+    border-radius: 999px;
+
+    padding: 5px 8px 5px 18px;
+
+    box-shadow:
+        0 8px 25px rgba(139, 94, 60, 0.12);
+
+    transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+    border-color: #b76e79;
+
+    box-shadow:
+        0 8px 30px rgba(183, 110, 121, 0.22);
+}
+
+.search-box>i {
+    flex-shrink: 0;
+
+    font-size: 18px;
+    color: #b76e79;
+
+    margin-right: 10px;
+}
+
+.search-box input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #6b4226;
+
+    font-size: 15px;
+
+    padding: 10px 5px;
+}
+
+.search-box input::placeholder {
+    color: #b5a197;
+}
+
+.search-clear {
+    flex-shrink: 0;
+
+    width: 34px;
+    height: 34px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(183, 110, 121, 0.1);
+
+    color: #8B5E3C;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.search-clear:hover {
+    background: #b76e79;
+    color: #fff;
+}
+
+.search-result {
+    margin-top: 10px;
+
+    font-size: 13px;
+
+    color: #8B5E3C;
+
+    text-align: center;
+}
+
+.search-result strong {
+    color: #b76e79;
+    font-weight: 700;
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 576px) {
+
+    .collection-search {
+        padding: 0 10px;
+        margin-bottom: 1rem;
+    }
+
+    .search-box {
+        padding-left: 14px;
+    }
+
+    .search-box input {
+        font-size: 14px;
+        padding: 9px 4px;
+    }
+
+    .search-box>i {
+        font-size: 16px;
+    }
+
+    .search-result {
+        font-size: 12px;
+    }
 }
 </style>
